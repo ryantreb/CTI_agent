@@ -109,6 +109,42 @@
           "prompt_hash": null
         }
       ]
+    },
+    "produce-stix-bundle": {
+      "current_version": 0,
+      "versions": [
+        {
+          "version": 0,
+          "timestamp": null,
+          "status": "baseline",
+          "eval_scores": {},
+          "prompt_hash": null
+        }
+      ]
+    },
+    "produce-attack-layers": {
+      "current_version": 0,
+      "versions": [
+        {
+          "version": 0,
+          "timestamp": null,
+          "status": "baseline",
+          "eval_scores": {},
+          "prompt_hash": null
+        }
+      ]
+    },
+    "recall-intelligence": {
+      "current_version": 0,
+      "versions": [
+        {
+          "version": 0,
+          "timestamp": null,
+          "status": "baseline",
+          "eval_scores": {},
+          "prompt_hash": null
+        }
+      ]
     }
   }
 }

@@ -1,4 +1,4 @@
-"""Integration tests for JTIA v2.2.0 Phase 1+2.
+"""Integration tests for JTIA v2.3.0 Phase 1+2+3.
 
 Validates cross-cutting concerns: routing consistency, config sync,
 health check behavior, skill coverage, version tracking, STIX output,
@@ -122,9 +122,9 @@ class TestSkillCoverage:
 class TestVersionTracking:
     """Version strings are consistent."""
 
-    def test_agent_md_version_is_2_2_0(self):
+    def test_agent_md_version_is_2_3_0(self):
         agent_md = (PROJECT_ROOT / "AGENT.md").read_text()
-        assert "**Version**: 2.2.0" in agent_md
+        assert "**Version**: 2.3.0" in agent_md
 
 
 # --- Phase 2 Tests ---
@@ -282,3 +282,85 @@ class TestDemoDataset:
     def test_run_demo_script_exists(self):
         script = PROJECT_ROOT / "demo" / "run_demo.sh"
         assert script.exists(), "demo/run_demo.sh missing"
+
+
+# --- Phase 3 Tests ---
+
+
+class TestConfidenceDecay:
+    """Confidence decay calculations work correctly."""
+
+    def test_decay_calculation(self):
+        from lib.confidence_decay import calculate_decay
+
+        result = calculate_decay(0.85, days_elapsed=15, half_life_days=30)
+        assert 0.3 < result < 0.5
+
+    def test_tracker_state_file_exists(self):
+        tracker_file = PROJECT_ROOT / "state" / "confidence_tracker.json"
+        assert tracker_file.exists()
+        with open(tracker_file) as f:
+            data = json.load(f)
+        assert "tracked_items" in data
+
+
+class TestActorProfiles:
+    """Actor profile management works correctly."""
+
+    def test_actors_directory_exists(self):
+        actors_dir = PROJECT_ROOT / "actors"
+        assert actors_dir.is_dir(), "actors/ directory missing"
+
+    def test_create_and_load_profile(self, tmp_path):
+        from lib.actor_profiles import (
+            create_actor_profile,
+            load_actor_profile,
+            save_actor_profile,
+        )
+
+        actors_dir = tmp_path / "actors"
+        actors_dir.mkdir()
+        profile = create_actor_profile(actor_id="TestActor", aliases=["Test"])
+        save_actor_profile(profile, actors_dir)
+        loaded = load_actor_profile("TestActor", actors_dir)
+        assert loaded is not None
+        assert loaded["actor_id"] == "TestActor"
+
+
+class TestMetricsCollection:
+    """Metrics collection works correctly."""
+
+    def test_metrics_file_exists(self):
+        metrics_file = PROJECT_ROOT / "state" / "metrics.jsonl"
+        assert metrics_file.exists()
+
+    def test_create_and_append_metric(self, tmp_path):
+        from lib.metrics import append_metric, create_metric, load_metrics
+
+        f = tmp_path / "test_metrics.jsonl"
+        metric = create_metric("test-sess", "iocs_enriched", 10)
+        append_metric(metric, f)
+        loaded = load_metrics(f)
+        assert len(loaded) == 1
+
+
+class TestPineconeMemory:
+    """Pinecone memory schema construction works correctly."""
+
+    def test_build_intel_record(self):
+        from lib.pinecone_memory import build_intel_record
+
+        record = build_intel_record(
+            report_guid="test-001",
+            summary="Test report",
+            threat_actors=["APT29"],
+        )
+        assert record["_id"] == "report-test-001"
+        assert "APT29" in record["threat_actors"]
+
+    def test_build_search_query(self):
+        from lib.pinecone_memory import PINECONE_INDEX, build_search_query
+
+        query = build_search_query("test query", top_k=3)
+        assert query["index"] == PINECONE_INDEX
+        assert query["top_k"] == 3

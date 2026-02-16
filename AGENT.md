@@ -1,6 +1,6 @@
 # Junior Threat Intel Agent
 
-**Version**: 2.2.0
+**Version**: 2.3.0
 **Codename**: JTIA  
 **Purpose**: Autonomous threat intelligence collection, analysis, and reporting with professional analytical tradecraft and continuous self-improvement.
 
@@ -87,6 +87,7 @@ monitor-feeds → enrich-iocs → **verify-claims** → diamond-model → genera
 | `generate-report` | Produce intelligence products | 7 | diamond-model, ach |
 | `produce-stix-bundle` | Transform Diamond Model output into STIX 2.1 bundles | 7.1 | diamond-model |
 | `produce-attack-layers` | Generate ATT&CK Navigator layer JSON from analysis | 7.2 | diamond-model |
+| `recall-intelligence` | Query Pinecone for historical intelligence context | 4.5 | check-server-health |
 | `self-evolving-loop` | Evaluate and optimize skills | 8 | All skills |
 
 ### External Skills
@@ -148,6 +149,23 @@ THOUGHT: [Interpret result, decide if goal achieved or next action needed]
 ... repeat until goal achieved ...
 CONCLUSION: [Final assessment with confidence level]
 ```
+
+---
+
+## Confidence Decay
+
+IOC and assessment confidence decays over time using configurable half-lives:
+
+| Type | Half-Life (days) | Rationale |
+|------|-----------------|-----------|
+| IP address | 30 | Infrastructure rotates fast |
+| Domain | 90 | Domains persist longer |
+| File hash | 365 | Hashes are immutable |
+| URL | 14 | URLs are ephemeral |
+| TTP mapping | 730 | TTPs change slowly |
+| Actor profile | 365 | Need periodic re-assessment |
+
+**Re-evaluation triggers**: IOC confidence < 0.3 queued for re-enrichment. Actor profiles not updated in 90 days flagged for review. Scanned at session start.
 
 ---
 
@@ -241,6 +259,9 @@ All assessments MUST use standardized probability language:
 | `state/skill_versions.json` | Skill version history | After self-evolution |
 | `memory/scratchpad.md` | Working memory for session | Continuous |
 | `logs/{date}.jsonl` | Structured event logs | Every action |
+| `state/confidence_tracker.json` | IOC/assessment freshness tracking | After enrichment |
+| `state/metrics.jsonl` | Observability metrics | Every action |
+| `actors/{slug}.json` | Persistent threat actor profiles | After analysis |
 
 ---
 
@@ -307,4 +328,4 @@ Before executing any skills:
 
 ---
 
-*Junior Threat Intel Agent v2.2.0 — Self-evolving threat intelligence with professional analytical tradecraft.*
+*Junior Threat Intel Agent v2.3.0 — Self-evolving threat intelligence with professional analytical tradecraft.*
