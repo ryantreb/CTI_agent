@@ -17,6 +17,6 @@ tenacity>=8.2.0
 python-dotenv>=1.0.0
 
 # ===========================================
-# Evaluation & Testing
+# Testing
 # ===========================================
-# No additional dependencies - uses stdlib only
+pytest>=8.0.0
