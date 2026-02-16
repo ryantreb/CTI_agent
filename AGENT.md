@@ -1,6 +1,6 @@
 # Junior Threat Intel Agent
 
-**Version**: 1.0.0  
+**Version**: 2.0.0  
 **Codename**: JTIA  
 **Purpose**: Autonomous threat intelligence collection, analysis, and reporting with professional analytical tradecraft and continuous self-improvement.
 
@@ -103,9 +103,10 @@ The `verify-claims` skill acts as an independent fact-checking sub-agent:
 
 ```
 SESSION_START:
+  0. CALL check-server-health skill (verify API keys and server availability)
   1. LOAD state/active_context.md
   2. LOAD memory/scratchpad.md (or create fresh)
-  3. CALL plan-session skill
+  3. CALL plan-session skill (uses health report to adjust execution plan)
   4. EXECUTE planned skills in priority order
   5. CALL self-evolving-loop (if enabled)
   6. SAVE state and logs
@@ -173,31 +174,33 @@ CONCLUSION: [Final assessment with confidence level]
 
 ## MCP Server Registry
 
-Primary intelligence and enrichment sources:
+**Source of truth**: `config/mcp_server_registry.json` (23 servers across 6 categories)
 
-| Server | Category | Primary Use |
-|--------|----------|-------------|
-| `feedly` | Intelligence | Threat feeds, trending threats, actor profiles |
-| `gti` | Enrichment | File/domain/IP analysis via VirusTotal |
-| `fastmcp-threatintel` | Enrichment | Multi-source IOC aggregation |
-| `secops-siem` | Operational | Detection deployment (optional) |
+| Category | Count | Examples |
+|----------|-------|---------|
+| Intelligence | 5 | feedly, otx-mcp, mcp-security-orkl, ti-mindmap-hub-mcp, mallory-mcp-server |
+| Enrichment | 5 | gti, fastmcp-threatintel, mcp-shodan, mcp-threatintel, mcp-censys |
+| Vulnerability | 5 | mcp-nvd, epss-mcp, kev-mcp, vulnerability-intelligence-mcp, nuclei-mcp |
+| Malware Analysis | 5 | ghidra-mcp, yara-mcp, capa-mcp, radare2-mcp, binwalk-mcp |
+| OSINT | 2 | mcp-dnstwist, networksdb-mcp |
+| Utility | 1 | cyberchef-api-mcp |
 
-### MCP Tool Selection Logic
+### MCP Tool Selection Logic (Dynamic Routing)
+
+Routing is loaded from `config/mcp_server_registry.json` and adjusted at session start by `check-server-health`.
+
 ```
-IF task == "gather_new_intelligence":
-    USE feedly.get_trending_threats() OR feedly.search_threats()
-    
-ELIF task == "enrich_ioc":
-    IF ioc_type == "hash":
-        USE gti.get_file_report() + gti.get_file_behavior_summary()
-    ELIF ioc_type == "domain":
-        USE gti.get_domain_report()
-    ELIF ioc_type == "ip":
-        USE fastmcp-threatintel.analyze()
-    
-ELIF task == "research_threat_actor":
-    USE gti.search_threat_actors() + feedly.get_actor_profile()
+FOR EACH ioc IN enrichment_queue:
+  DETERMINE ioc_type (ip, domain, hash, url, cve, threat_actor)
+  LOAD routing chain from adjusted_routing
+
+  TRY primary servers first
+  IF primary fails or unavailable: TRY secondary
+  IF secondary fails or unavailable: TRY fallback
+  IF all fail: LOG degraded capability, CONTINUE
 ```
+
+See `config/mcp_server_registry.json` routing table for the full primary/secondary/fallback chains per IOC type.
 
 ---
 
@@ -261,10 +264,10 @@ ON_ERROR:
 
 Before executing any skills:
 
-- [ ] Verify MCP servers are configured in `config/mcp_config.json`
+- [ ] Run `check-server-health` skill (verifies API keys and server availability)
 - [ ] Check `state/` directory exists and is writable
 - [ ] Load `memory/scratchpad.md` or create fresh
-- [ ] Verify API keys are set (check env, never log)
+- [ ] Review health report for degraded capabilities
 - [ ] Run `plan-session` skill to generate execution plan
 
 ---
@@ -290,4 +293,4 @@ Before executing any skills:
 
 ---
 
-*Junior Threat Intel Agent v1.0.0 — Self-evolving threat intelligence with professional analytical tradecraft.*
+*Junior Threat Intel Agent v2.0.0 — Self-evolving threat intelligence with professional analytical tradecraft.*
