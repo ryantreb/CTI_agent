@@ -3,9 +3,13 @@
 import pytest
 from lib.team_data import (
     create_assessment_package,
+    create_challenge,
     create_collection_bundle,
+    create_debate_record,
     create_enriched_ioc,
     create_key_judgment,
+    create_verification_report,
+    create_verified_claim,
 )
 
 
@@ -107,3 +111,113 @@ class TestAssessmentPackage:
         )
         assert package["ttps_identified"] == ["T1566.001", "T1059.001"]
         assert package["ach_result"]["evidence_matrix"][0]["evidence"] == "E1"
+
+
+class TestDebateRecord:
+    """Debate record for Devil's Advocate ↔ Analyst exchange."""
+
+    def test_create_challenge(self):
+        challenge = create_challenge(
+            target_judgment_id="KJ1",
+            challenge_type="alternative_hypothesis",
+            argument="Criminal group mimicking APT29 TTPs is equally plausible",
+            counter_evidence=["No financial motive found", "Tool reuse is common"],
+            proposed_confidence_adjustment=-0.15,
+        )
+        assert challenge["target_judgment_id"] == "KJ1"
+        assert challenge["challenge_type"] == "alternative_hypothesis"
+        assert challenge["proposed_confidence_adjustment"] == -0.15
+
+    def test_create_debate_record(self):
+        challenge = create_challenge(
+            target_judgment_id="KJ1",
+            challenge_type="evidence_underweighted",
+            argument="Absence of financial exfiltration undermines espionage hypothesis",
+            counter_evidence=["No data exfil observed"],
+        )
+        record = create_debate_record(
+            session_id="test-session",
+            assessment_package={"type": "assessment_package"},
+            challenges=[challenge],
+            rounds_completed=1,
+            consensus_reached=False,
+        )
+        assert record["type"] == "debate_record"
+        assert record["rounds_completed"] == 1
+        assert record["consensus_reached"] is False
+        assert len(record["challenges"]) == 1
+
+    def test_debate_record_with_analyst_responses(self):
+        record = create_debate_record(
+            session_id="test-session",
+            assessment_package={},
+            challenges=[],
+            rounds_completed=2,
+            consensus_reached=True,
+            analyst_responses=[
+                {"challenge_id": 0, "response": "Accepted", "adjustment": "Reduced to 'roughly even chance'"}
+            ],
+            final_judgments=[
+                {"judgment_id": "KJ1", "revised_confidence": "roughly even chance"}
+            ],
+        )
+        assert record["consensus_reached"] is True
+        assert len(record["analyst_responses"]) == 1
+        assert len(record["final_judgments"]) == 1
+
+
+class TestVerificationReport:
+    """Verification report for Verifier → Reporter handoff."""
+
+    def test_create_verified_claim(self):
+        claim = create_verified_claim(
+            claim_id="C1",
+            original_claim="Hash abc123 has 45 detections",
+            claim_type="IOC",
+            verification_status="VERIFIED_HIGH",
+            confidence_score=0.95,
+            sources_checked=["gti", "mcp-threatintel"],
+        )
+        assert claim["verification_status"] == "VERIFIED_HIGH"
+        assert claim["confidence_score"] == 0.95
+
+    def test_create_verification_report(self):
+        claim = create_verified_claim(
+            claim_id="C1",
+            original_claim="Test claim",
+            claim_type="IOC",
+            verification_status="VERIFIED_HIGH",
+            confidence_score=0.95,
+            sources_checked=["gti"],
+        )
+        report = create_verification_report(
+            session_id="test-session",
+            verified_claims=[claim],
+            refuted_claims=[],
+            unverified_claims=[],
+        )
+        assert report["type"] == "verification_report"
+        assert report["total_claims"] == 1
+        assert report["verified_count"] == 1
+        assert report["refuted_count"] == 0
+        assert report["hallucination_flags"] == []
+
+    def test_verification_report_with_hallucinations(self):
+        refuted = create_verified_claim(
+            claim_id="C2",
+            original_claim="IP 1.2.3.4 is a known C2",
+            claim_type="IOC",
+            verification_status="REFUTED",
+            confidence_score=0.0,
+            sources_checked=["gti", "shodan"],
+            discrepancies=["IP not found in any threat database"],
+        )
+        report = create_verification_report(
+            session_id="test-session",
+            verified_claims=[],
+            refuted_claims=[refuted],
+            unverified_claims=[],
+            hallucination_flags=["C2: IP claimed as C2 but not found in any source"],
+        )
+        assert report["refuted_count"] == 1
+        assert len(report["hallucination_flags"]) == 1

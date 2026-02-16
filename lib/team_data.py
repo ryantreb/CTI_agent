@@ -97,3 +97,97 @@ def create_assessment_package(
         "actor_profiles_referenced": actor_profiles_referenced or [],
         "intelligence_gaps": intelligence_gaps or [],
     }
+
+
+def create_challenge(
+    target_judgment_id: str,
+    challenge_type: str,
+    argument: str,
+    counter_evidence: list[str],
+    *,
+    proposed_confidence_adjustment: float = 0.0,
+    alternative_hypothesis: str | None = None,
+) -> dict:
+    """Create a Devil's Advocate challenge against a key judgment."""
+    return {
+        "target_judgment_id": target_judgment_id,
+        "challenge_type": challenge_type,
+        "argument": argument,
+        "counter_evidence": counter_evidence,
+        "proposed_confidence_adjustment": proposed_confidence_adjustment,
+        "alternative_hypothesis": alternative_hypothesis,
+    }
+
+
+def create_debate_record(
+    session_id: str,
+    assessment_package: dict,
+    challenges: list[dict],
+    rounds_completed: int,
+    consensus_reached: bool,
+    *,
+    analyst_responses: list[dict] | None = None,
+    final_judgments: list[dict] | None = None,
+    dissenting_views: list[str] | None = None,
+) -> dict:
+    """Create a debate record for Devil's Advocate / Analyst exchange."""
+    return {
+        "type": "debate_record",
+        "session_id": session_id,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "assessment_package": assessment_package,
+        "challenges": challenges,
+        "rounds_completed": rounds_completed,
+        "consensus_reached": consensus_reached,
+        "analyst_responses": analyst_responses or [],
+        "final_judgments": final_judgments or [],
+        "dissenting_views": dissenting_views or [],
+    }
+
+
+def create_verified_claim(
+    claim_id: str,
+    original_claim: str,
+    claim_type: str,
+    verification_status: str,
+    confidence_score: float,
+    sources_checked: list[str],
+    *,
+    discrepancies: list[str] | None = None,
+    api_responses: list[dict] | None = None,
+) -> dict:
+    """Create a verified claim entry for the verification report."""
+    return {
+        "claim_id": claim_id,
+        "original_claim": original_claim,
+        "claim_type": claim_type,
+        "verification_status": verification_status,
+        "confidence_score": confidence_score,
+        "sources_checked": sources_checked,
+        "discrepancies": discrepancies or [],
+        "api_responses": api_responses or [],
+    }
+
+
+def create_verification_report(
+    session_id: str,
+    verified_claims: list[dict],
+    refuted_claims: list[dict],
+    unverified_claims: list[dict],
+    *,
+    hallucination_flags: list[str] | None = None,
+) -> dict:
+    """Create a verification report for Verifier / Reporter handoff."""
+    return {
+        "type": "verification_report",
+        "session_id": session_id,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "verified_claims": verified_claims,
+        "refuted_claims": refuted_claims,
+        "unverified_claims": unverified_claims,
+        "total_claims": len(verified_claims) + len(refuted_claims) + len(unverified_claims),
+        "verified_count": len(verified_claims),
+        "refuted_count": len(refuted_claims),
+        "unverified_count": len(unverified_claims),
+        "hallucination_flags": hallucination_flags or [],
+    }
