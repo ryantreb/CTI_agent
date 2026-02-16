@@ -1,6 +1,6 @@
 # Junior Threat Intel Agent
 
-**Version**: 2.3.0
+**Version**: 2.4.0
 **Codename**: JTIA  
 **Purpose**: Autonomous threat intelligence collection, analysis, and reporting with professional analytical tradecraft and continuous self-improvement.
 
@@ -88,6 +88,7 @@ monitor-feeds → enrich-iocs → **verify-claims** → diamond-model → genera
 | `produce-stix-bundle` | Transform Diamond Model output into STIX 2.1 bundles | 7.1 | diamond-model |
 | `produce-attack-layers` | Generate ATT&CK Navigator layer JSON from analysis | 7.2 | diamond-model |
 | `recall-intelligence` | Query Pinecone for historical intelligence context | 4.5 | check-server-health |
+| `orchestrate-team` | Coordinate 5-agent intelligence team pipeline | 0 (wraps all) | All skills |
 | `self-evolving-loop` | Evaluate and optimize skills | 8 | All skills |
 
 ### External Skills
@@ -199,6 +200,42 @@ IOC and assessment confidence decays over time using configurable half-lives:
 - New version scores 10%+ worse than previous
 - 3+ consecutive failures after update
 - Any grader returns score < 0.3
+
+---
+
+## Multi-Agent Team
+
+### Team Composition (5 agents)
+
+| Agent | Role | Skills Used | Mandate |
+|-------|------|------------|---------|
+| **Collector** | Gather raw intelligence | monitor-feeds, enrich-iocs | Parallel feed monitoring and IOC enrichment across all MCP servers |
+| **Analyst** | Produce assessments | diamond-model, ACH, recall-intelligence | Structure analysis and generate hypotheses |
+| **Devil's Advocate** | Challenge assessments | ACH (adversarial mode) | Systematically argue against the Analyst's leading hypothesis |
+| **Verifier** | Validate all claims | verify-claims | Independent fact-checking of ALL claims before report generation |
+| **Reporter** | Produce final products | generate-report, produce-stix-bundle, produce-attack-layers | Assemble verified, challenged intelligence into final deliverables |
+
+### Pipeline
+
+```
+Collector → Analyst → [Devil's Advocate ↔ Analyst debate] → Verifier → Reporter
+```
+
+### Devil's Advocate Protocol
+
+1. MUST challenge ALL assessments rated "highly likely" or above
+2. MUST argue for the second-most-likely hypothesis
+3. Proposes at least one alternative interpretation per key judgment
+4. Maximum 3 debate rounds before documenting dissent
+5. Disagreements documented in report's "Alternative Analysis" section (per ICD 203)
+
+### Verifier Protocol
+
+1. Independently re-queries all cited sources via MCP servers
+2. Confirms every IOC, TTP, and attribution claim exists in source data
+3. Flags claims that cannot be independently verified
+4. REFUTED claims excluded from Reporter input
+5. Hallucination patterns detected and flagged
 
 ---
 
@@ -328,4 +365,4 @@ Before executing any skills:
 
 ---
 
-*Junior Threat Intel Agent v2.3.0 — Self-evolving threat intelligence with professional analytical tradecraft.*
+*Junior Threat Intel Agent v2.4.0 — Multi-agent intelligence team with adversarial review and independent verification.*
