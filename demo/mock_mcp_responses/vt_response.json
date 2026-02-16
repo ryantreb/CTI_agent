@@ -1,0 +1,15 @@
+{
+  "server": "gti",
+  "query": "198.51.100.42",
+  "response": {
+    "data": {
+      "attributes": {
+        "last_analysis_stats": {"malicious": 15, "suspicious": 3, "harmless": 50, "undetected": 12},
+        "country": "RU",
+        "as_owner": "Example Hosting",
+        "reputation": -42,
+        "tags": ["c2", "apt"]
+      }
+    }
+  }
+}

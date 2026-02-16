@@ -1,0 +1,13 @@
+{
+  "server": "mcp-shodan",
+  "query": "198.51.100.42",
+  "response": {
+    "ip_str": "198.51.100.42",
+    "ports": [443, 8443, 22],
+    "hostnames": ["update.example-malware.com"],
+    "org": "Example Hosting LLC",
+    "os": "Linux",
+    "country_code": "RU",
+    "vulns": ["CVE-2024-0001"]
+  }
+}

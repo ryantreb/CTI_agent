@@ -1,0 +1,36 @@
+{
+  "adversary": {
+    "name": "APT29",
+    "aliases": ["Cozy Bear", "The Dukes", "Midnight Blizzard"],
+    "description": "Russian SVR-affiliated threat actor conducting supply chain attacks",
+    "sophistication": "expert"
+  },
+  "infrastructure": {
+    "name": "APT29 C2 Infrastructure",
+    "types": ["command-and-control"],
+    "iocs": [
+      {"type": "ipv4-addr", "value": "198.51.100.42"},
+      {"type": "domain-name", "value": "update.example-malware.com"},
+      {"type": "sha-256", "value": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      {"type": "url", "value": "https://update.example-malware.com/patch.exe"}
+    ]
+  },
+  "capability": {
+    "malware": {
+      "name": "Trojanized Installer",
+      "types": ["backdoor", "trojan"],
+      "is_family": false
+    },
+    "attack_patterns": [
+      {"name": "Supply Chain Compromise", "mitre_id": "T1195.002", "kill_chain_phase": "initial-access", "confidence": "high"},
+      {"name": "PowerShell", "mitre_id": "T1059.001", "kill_chain_phase": "execution", "confidence": "high"},
+      {"name": "Web Protocols", "mitre_id": "T1071.001", "kill_chain_phase": "command-and-control", "confidence": "medium"},
+      {"name": "Obfuscated Files", "mitre_id": "T1027", "kill_chain_phase": "defense-evasion", "confidence": "medium"}
+    ]
+  },
+  "victim": {
+    "name": "Target Organization",
+    "identity_class": "organization",
+    "sectors": ["technology"]
+  }
+}

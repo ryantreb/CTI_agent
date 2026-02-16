@@ -1,0 +1,24 @@
+{
+  "report_title": "APT29 Supply Chain Campaign - Demo",
+  "report_date": "2026-02-16",
+  "source": "JTIA Demo Dataset",
+  "summary": "Synthetic threat report demonstrating JTIA pipeline. APT29 (Cozy Bear) conducts supply chain compromise via trojanized software update, establishing C2 via compromised infrastructure.",
+  "iocs": [
+    {"type": "ipv4-addr", "value": "198.51.100.42", "context": "C2 server"},
+    {"type": "domain-name", "value": "update.example-malware.com", "context": "Payload delivery domain"},
+    {"type": "sha-256", "value": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "context": "Trojanized installer hash"},
+    {"type": "url", "value": "https://update.example-malware.com/patch.exe", "context": "Malicious download URL"}
+  ],
+  "ttps": [
+    {"mitre_id": "T1195.002", "name": "Supply Chain Compromise: Compromise Software Supply Chain", "tactic": "initial-access", "confidence": "high"},
+    {"mitre_id": "T1059.001", "name": "Command and Scripting Interpreter: PowerShell", "tactic": "execution", "confidence": "high"},
+    {"mitre_id": "T1071.001", "name": "Application Layer Protocol: Web Protocols", "tactic": "command-and-control", "confidence": "medium"},
+    {"mitre_id": "T1027", "name": "Obfuscated Files or Information", "tactic": "defense-evasion", "confidence": "medium"}
+  ],
+  "attribution": {
+    "actor": "APT29",
+    "aliases": ["Cozy Bear", "The Dukes", "Midnight Blizzard"],
+    "country": "Russia",
+    "confidence": "likely"
+  }
+}

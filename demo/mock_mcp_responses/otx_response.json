@@ -1,0 +1,12 @@
+{
+  "server": "otx-mcp",
+  "query": "198.51.100.42",
+  "response": {
+    "pulse_count": 3,
+    "pulses": [
+      {"name": "APT29 Infrastructure 2026", "tags": ["apt29", "cozy-bear", "c2"]},
+      {"name": "Russian Threat Actors", "tags": ["russia", "svr"]}
+    ],
+    "reputation": -85
+  }
+}
