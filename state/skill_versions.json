@@ -2,6 +2,18 @@
   "schema_version": "1.0",
   "last_updated": null,
   "skills": {
+    "check-server-health": {
+      "current_version": 0,
+      "versions": [
+        {
+          "version": 0,
+          "timestamp": null,
+          "status": "baseline",
+          "eval_scores": {},
+          "prompt_hash": null
+        }
+      ]
+    },
     "monitor-feeds": {
       "current_version": 0,
       "versions": [

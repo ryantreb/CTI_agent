@@ -77,7 +77,8 @@ monitor-feeds → enrich-iocs → **verify-claims** → diamond-model → genera
 
 | Skill | Purpose | Priority | Dependencies |
 |-------|---------|----------|--------------|
-| `plan-session` | Generate execution plan before actions | 1 | None |
+| `check-server-health` | Verify MCP server availability and report degraded capabilities | 0 | None |
+| `plan-session` | Generate execution plan before actions | 1 | check-server-health |
 | `monitor-feeds` | Collect intelligence from MCP sources | 2 | plan-session |
 | `enrich-iocs` | Multi-source IOC enrichment | 3 | monitor-feeds |
 | `verify-claims` | Validate claims against source APIs | 4 | enrich-iocs |
