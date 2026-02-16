@@ -2,8 +2,10 @@
 
 import pytest
 from lib.team_data import (
+    create_assessment_package,
     create_collection_bundle,
     create_enriched_ioc,
+    create_key_judgment,
 )
 
 
@@ -60,3 +62,48 @@ class TestCollectionBundle:
         assert ioc["ttps"] == []
         assert ioc["verification_status"] == "UNVERIFIED"
         assert ioc["threat_actors"] == []
+
+
+class TestAssessmentPackage:
+    """Assessment package for Analyst → Devil's Advocate handoff."""
+
+    def test_create_key_judgment(self):
+        judgment = create_key_judgment(
+            judgment_id="KJ1",
+            statement="APT29 is likely responsible",
+            confidence="likely",
+            confidence_numeric=0.70,
+            supporting_evidence=["Known malware signature", "Targeting pattern"],
+            assumptions=["Attribution data is accurate"],
+        )
+        assert judgment["judgment_id"] == "KJ1"
+        assert judgment["confidence"] == "likely"
+        assert len(judgment["supporting_evidence"]) == 2
+
+    def test_create_assessment_package(self):
+        judgment = create_key_judgment(
+            judgment_id="KJ1",
+            statement="Test assessment",
+            confidence="likely",
+            confidence_numeric=0.70,
+        )
+        package = create_assessment_package(
+            session_id="test-session",
+            diamond_model={"adversary": {"name": "APT29"}},
+            ach_result={"most_likely": "H1"},
+            key_judgments=[judgment],
+        )
+        assert package["type"] == "assessment_package"
+        assert package["diamond_model"]["adversary"]["name"] == "APT29"
+        assert len(package["key_judgments"]) == 1
+
+    def test_assessment_package_includes_evidence_matrix(self):
+        package = create_assessment_package(
+            session_id="test-session",
+            diamond_model={},
+            ach_result={"evidence_matrix": [{"evidence": "E1"}]},
+            key_judgments=[],
+            ttps_identified=["T1566.001", "T1059.001"],
+        )
+        assert package["ttps_identified"] == ["T1566.001", "T1059.001"]
+        assert package["ach_result"]["evidence_matrix"][0]["evidence"] == "E1"

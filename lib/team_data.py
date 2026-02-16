@@ -51,3 +51,49 @@ def create_collection_bundle(
         "ioc_count": len(enriched_iocs or []),
         "item_count": len(raw_items or []),
     }
+
+
+def create_key_judgment(
+    judgment_id: str,
+    statement: str,
+    confidence: str,
+    confidence_numeric: float,
+    *,
+    supporting_evidence: list[str] | None = None,
+    contradicting_evidence: list[str] | None = None,
+    assumptions: list[str] | None = None,
+) -> dict:
+    """Create a structured key judgment for assessment packages."""
+    return {
+        "judgment_id": judgment_id,
+        "statement": statement,
+        "confidence": confidence,
+        "confidence_numeric": confidence_numeric,
+        "supporting_evidence": supporting_evidence or [],
+        "contradicting_evidence": contradicting_evidence or [],
+        "assumptions": assumptions or [],
+    }
+
+
+def create_assessment_package(
+    session_id: str,
+    diamond_model: dict,
+    ach_result: dict,
+    key_judgments: list[dict],
+    *,
+    ttps_identified: list[str] | None = None,
+    actor_profiles_referenced: list[str] | None = None,
+    intelligence_gaps: list[str] | None = None,
+) -> dict:
+    """Create an assessment package for Analyst → Devil's Advocate handoff."""
+    return {
+        "type": "assessment_package",
+        "session_id": session_id,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "diamond_model": diamond_model,
+        "ach_result": ach_result,
+        "key_judgments": key_judgments,
+        "ttps_identified": ttps_identified or [],
+        "actor_profiles_referenced": actor_profiles_referenced or [],
+        "intelligence_gaps": intelligence_gaps or [],
+    }
