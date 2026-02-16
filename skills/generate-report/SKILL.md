@@ -119,6 +119,20 @@ rule [Threat_Name]_[Variant] {
 }
 ```
 
+## Detection Rule Delegation
+
+When generating detection artifacts, delegate to specialized skills:
+
+| Rule Type | Delegate To | Rationale |
+|-----------|------------|-----------|
+| YARA rules | `external/yara-rule-skill` | YARAHQ provides 20+ quality checks, naming conventions, performance optimization |
+| Sigma rules | `external/malware-analysis/detection-engineer` | gl0bal01 provides IOC management and multi-format conversion |
+| Suricata rules | `external/malware-analysis/detection-engineer` | Same skill handles network detection rules |
+
+**Protocol**: Generate detection artifacts by invoking the specialized skill with the analysis context, rather than writing rules inline. This ensures professional quality and consistency.
+
+See `config/skill_ownership.json` for the full ownership matrix.
+
 ## Output Files
 
 | File | Format | Content |

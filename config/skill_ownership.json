@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "ownership": {
+    "yara_rules": {
+      "primary": "external/yara-rule-skill",
+      "description": "YARAHQ skill is the authoritative YARA rule author",
+      "delegates_from": ["generate-report", "external/malware-analysis/detection-engineer"]
+    },
+    "sigma_rules": {
+      "primary": "external/malware-analysis/detection-engineer",
+      "description": "gl0bal01 detection-engineer is the authoritative Sigma rule author",
+      "delegates_from": ["generate-report"]
+    },
+    "suricata_rules": {
+      "primary": "external/malware-analysis/detection-engineer",
+      "description": "gl0bal01 detection-engineer handles Suricata rules",
+      "delegates_from": ["generate-report"]
+    },
+    "reports": {
+      "primary": "generate-report",
+      "description": "JTIA generate-report is the primary report skill",
+      "alternatives": {
+        "malware_deep_dive": "external/malware-analysis/malware-report-writer"
+      }
+    },
+    "diamond_model": {
+      "primary": "diamond-model-analysis",
+      "description": "JTIA's own Diamond Model analysis. TI Mindmap HUB is source/validator only",
+      "external_validators": ["ti-mindmap-hub-mcp"]
+    }
+  }
+}
