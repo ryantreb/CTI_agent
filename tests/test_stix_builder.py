@@ -1,8 +1,7 @@
 """Tests for STIX 2.1 bundle builder."""
-import json
-from datetime import datetime, timezone
 
-import pytest
+import json
+
 
 from lib.stix_builder import (
     build_stix_bundle,
@@ -74,14 +73,18 @@ class TestSTIXObjectCreation:
     def test_create_attack_pattern(self):
         ap = create_attack_pattern(
             name="Spearphishing Attachment",
-            external_references=[{
-                "source_name": "mitre-attack",
-                "external_id": "T1566.001",
-            }],
-            kill_chain_phases=[{
-                "kill_chain_name": "mitre-attack",
-                "phase_name": "initial-access",
-            }],
+            external_references=[
+                {
+                    "source_name": "mitre-attack",
+                    "external_id": "T1566.001",
+                }
+            ],
+            kill_chain_phases=[
+                {
+                    "kill_chain_name": "mitre-attack",
+                    "phase_name": "initial-access",
+                }
+            ],
         )
         assert ap["type"] == "attack-pattern"
         assert ap["external_references"][0]["external_id"] == "T1566.001"
@@ -110,7 +113,9 @@ class TestBundleBuilding:
 
     def test_build_stix_bundle_valid(self):
         actor = create_threat_actor(name="TestActor")
-        mal = create_malware(name="TestMalware", malware_types=["trojan"], is_family=False)
+        mal = create_malware(
+            name="TestMalware", malware_types=["trojan"], is_family=False
+        )
         bundle = build_stix_bundle([actor, mal])
 
         assert bundle["type"] == "bundle"
@@ -145,7 +150,11 @@ class TestDiamondToSTIX:
                 ],
             },
             "capability": {
-                "malware": {"name": "SUNBURST", "types": ["backdoor"], "is_family": True},
+                "malware": {
+                    "name": "SUNBURST",
+                    "types": ["backdoor"],
+                    "is_family": True,
+                },
                 "attack_patterns": [
                     {
                         "name": "Supply Chain Compromise",
@@ -177,7 +186,11 @@ class TestDiamondToSTIX:
             "adversary": {"name": "Unknown Actor"},
             "capability": {
                 "attack_patterns": [
-                    {"name": "Phishing", "mitre_id": "T1566", "kill_chain_phase": "initial-access"}
+                    {
+                        "name": "Phishing",
+                        "mitre_id": "T1566",
+                        "kill_chain_phase": "initial-access",
+                    }
                 ],
             },
         }

@@ -1,7 +1,7 @@
 """Tests for ATT&CK Navigator layer generation."""
+
 import json
 
-import pytest
 
 from lib.attack_layers import (
     build_attack_layer,
@@ -113,7 +113,11 @@ class TestDiamondToLayer:
         diamond = {
             "capability": {
                 "attack_patterns": [
-                    {"name": "Phishing", "mitre_id": "T1566", "kill_chain_phase": "initial-access"},
+                    {
+                        "name": "Phishing",
+                        "mitre_id": "T1566",
+                        "kill_chain_phase": "initial-access",
+                    },
                 ],
             },
         }

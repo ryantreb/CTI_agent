@@ -1,6 +1,6 @@
 # Junior Threat Intel Agent
 
-**Version**: 2.1.0
+**Version**: 2.2.0
 **Codename**: JTIA  
 **Purpose**: Autonomous threat intelligence collection, analysis, and reporting with professional analytical tradecraft and continuous self-improvement.
 
@@ -85,9 +85,21 @@ monitor-feeds → enrich-iocs → **verify-claims** → diamond-model → genera
 | `diamond-model-analysis` | Structure intrusion analysis | 5 | verify-claims |
 | `analysis-competing-hypotheses` | Test attribution hypotheses | 6 | diamond-model |
 | `generate-report` | Produce intelligence products | 7 | diamond-model, ach |
+| `produce-stix-bundle` | Transform Diamond Model output into STIX 2.1 bundles | 7.1 | diamond-model |
+| `produce-attack-layers` | Generate ATT&CK Navigator layer JSON from analysis | 7.2 | diamond-model |
 | `self-evolving-loop` | Evaluate and optimize skills | 8 | All skills |
 
-### Verification Agent (New)
+### External Skills
+
+| Source | Skills | Integration Point |
+|--------|--------|-------------------|
+| gl0bal01/malware-analysis | malware-triage, malware-dynamic-analysis, specialized-file-analyzer, detection-engineer, malware-report-writer | Malware analysis pipeline |
+| YARAHQ/yara-rule-skill | yara-rule-skill | YARA detection rule authoring (primary) |
+| trailofbits/skills | variant-analysis, semgrep-rule-creator, static-analysis, differential-review, insecure-defaults, dwarf-expert | Security analysis and detection engineering |
+
+**Skill Conflict Resolution**: See `config/skill_ownership.json`. YARA → YARAHQ, Sigma → gl0bal01, Reports → JTIA's generate-report.
+
+### Verification Agent
 
 The `verify-claims` skill acts as an independent fact-checking sub-agent:
 
@@ -240,6 +252,8 @@ All assessments MUST use standardized probability language:
 | Detection Rules | `reports/{guid}_detections.yml` | Sigma/YARA |
 | IOC Lists | `reports/{guid}_iocs.json` | STIX 2.1 JSON |
 | Alerts | `alerts/pending.json` | JSON queue |
+| STIX Bundles | `reports/{guid}_stix_bundle.json` | STIX 2.1 JSON |
+| ATT&CK Layers | `reports/{guid}_attack_layer.json` | Navigator v4.5 JSON |
 
 ---
 
@@ -293,4 +307,4 @@ Before executing any skills:
 
 ---
 
-*Junior Threat Intel Agent v2.1.0 — Self-evolving threat intelligence with professional analytical tradecraft.*
+*Junior Threat Intel Agent v2.2.0 — Self-evolving threat intelligence with professional analytical tradecraft.*
