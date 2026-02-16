@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0",
+  "team_name": "jtia-intelligence-team",
+  "version": "2.4.0",
+  "agents": [
+    {
+      "name": "collector",
+      "definition": "agents/definitions/collector.md",
+      "role": "intelligence-collector",
+      "skills": ["check-server-health", "monitor-feeds", "enrich-iocs", "recall-intelligence"],
+      "pipeline_position": 1,
+      "receives_from": null,
+      "sends_to": "analyst"
+    },
+    {
+      "name": "analyst",
+      "definition": "agents/definitions/analyst.md",
+      "role": "intelligence-analyst",
+      "skills": ["diamond-model-analysis", "analysis-competing-hypotheses", "recall-intelligence"],
+      "pipeline_position": 2,
+      "receives_from": "collector",
+      "sends_to": "devils-advocate"
+    },
+    {
+      "name": "devils-advocate",
+      "definition": "agents/definitions/devils_advocate.md",
+      "role": "adversarial-reviewer",
+      "skills": ["analysis-competing-hypotheses"],
+      "pipeline_position": 3,
+      "receives_from": "analyst",
+      "sends_to": "verifier",
+      "debate_partner": "analyst",
+      "max_debate_rounds": 3
+    },
+    {
+      "name": "verifier",
+      "definition": "agents/definitions/verifier.md",
+      "role": "independent-verifier",
+      "skills": ["verify-claims"],
+      "pipeline_position": 4,
+      "receives_from": "devils-advocate",
+      "sends_to": "reporter"
+    },
+    {
+      "name": "reporter",
+      "definition": "agents/definitions/reporter.md",
+      "role": "intelligence-reporter",
+      "skills": ["generate-report", "produce-stix-bundle", "produce-attack-layers"],
+      "pipeline_position": 5,
+      "receives_from": "verifier",
+      "sends_to": null
+    }
+  ],
+  "pipeline": [
+    {"phase": "collect", "agent": "collector", "output": "collection_bundle"},
+    {"phase": "analyze", "agent": "analyst", "output": "assessment_package"},
+    {"phase": "debate", "agents": ["devils-advocate", "analyst"], "output": "debate_record"},
+    {"phase": "verify", "agent": "verifier", "output": "verification_report"},
+    {"phase": "report", "agent": "reporter", "output": "final_deliverables"}
+  ],
+  "data_handoffs": {
+    "collection_bundle": {"from": "collector", "to": "analyst"},
+    "assessment_package": {"from": "analyst", "to": "devils-advocate"},
+    "debate_record": {"from": "devils-advocate", "to": "verifier"},
+    "verification_report": {"from": "verifier", "to": "reporter"}
+  }
+}
