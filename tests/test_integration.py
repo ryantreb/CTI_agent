@@ -1,4 +1,4 @@
-"""Integration tests for JTIA v2.3.0 Phase 1+2+3.
+"""Integration tests for JTIA v2.4.0 Phase 1+2+3+4.
 
 Validates cross-cutting concerns: routing consistency, config sync,
 health check behavior, skill coverage, version tracking, STIX output,
@@ -122,9 +122,9 @@ class TestSkillCoverage:
 class TestVersionTracking:
     """Version strings are consistent."""
 
-    def test_agent_md_version_is_2_3_0(self):
+    def test_agent_md_version_is_2_4_0(self):
         agent_md = (PROJECT_ROOT / "AGENT.md").read_text()
-        assert "**Version**: 2.3.0" in agent_md
+        assert "**Version**: 2.4.0" in agent_md
 
 
 # --- Phase 2 Tests ---
@@ -364,3 +364,203 @@ class TestPineconeMemory:
         query = build_search_query("test query", top_k=3)
         assert query["index"] == PINECONE_INDEX
         assert query["top_k"] == 3
+
+
+# --- Phase 4 Tests ---
+
+
+class TestTeamDataSchemas:
+    """Inter-agent data schemas are valid."""
+
+    def test_collection_bundle_creation(self):
+        from lib.team_data import create_collection_bundle, create_enriched_ioc
+
+        ioc = create_enriched_ioc(
+            ioc_type="ip", value="10.0.0.1", confidence=0.85, sources=["gti"]
+        )
+        bundle = create_collection_bundle(
+            session_id="test", sources_queried=["feedly"], enriched_iocs=[ioc]
+        )
+        assert bundle["type"] == "collection_bundle"
+        assert bundle["ioc_count"] == 1
+
+    def test_assessment_package_creation(self):
+        from lib.team_data import create_assessment_package, create_key_judgment
+
+        judgment = create_key_judgment(
+            judgment_id="KJ1",
+            statement="Test",
+            confidence="likely",
+            confidence_numeric=0.70,
+        )
+        package = create_assessment_package(
+            session_id="test",
+            diamond_model={},
+            ach_result={},
+            key_judgments=[judgment],
+        )
+        assert package["type"] == "assessment_package"
+
+    def test_debate_record_creation(self):
+        from lib.team_data import create_challenge, create_debate_record
+
+        challenge = create_challenge(
+            target_judgment_id="KJ1",
+            challenge_type="alternative_hypothesis",
+            argument="Test challenge",
+            counter_evidence=["E1"],
+        )
+        record = create_debate_record(
+            session_id="test",
+            assessment_package={},
+            challenges=[challenge],
+            rounds_completed=1,
+            consensus_reached=True,
+        )
+        assert record["type"] == "debate_record"
+
+    def test_verification_report_creation(self):
+        from lib.team_data import create_verification_report, create_verified_claim
+
+        claim = create_verified_claim(
+            claim_id="C1",
+            original_claim="Test",
+            claim_type="IOC",
+            verification_status="VERIFIED_HIGH",
+            confidence_score=0.95,
+            sources_checked=["gti"],
+        )
+        report = create_verification_report(
+            session_id="test",
+            verified_claims=[claim],
+            refuted_claims=[],
+            unverified_claims=[],
+        )
+        assert report["type"] == "verification_report"
+        assert report["total_claims"] == 1
+
+
+class TestDebateEngine:
+    """Debate engine enforces adversarial review rules."""
+
+    def test_mandatory_challenge_thresholds(self):
+        from lib.debate import should_challenge
+
+        assert should_challenge({"confidence": "highly likely"}) is True
+        assert should_challenge({"confidence": "almost certain"}) is True
+        assert should_challenge({"confidence": "likely"}) is False
+
+    def test_consensus_detection(self):
+        from lib.debate import check_consensus
+
+        result = check_consensus(challenges=[], analyst_responses=[], round_num=1)
+        assert result["consensus"] is True
+
+    def test_alternative_analysis_generation(self):
+        from lib.debate import build_alternative_analysis_section
+
+        record = {
+            "challenges": [
+                {
+                    "target_judgment_id": "KJ1",
+                    "argument": "Test",
+                    "counter_evidence": [],
+                }
+            ],
+            "analyst_responses": [],
+            "consensus_reached": False,
+            "dissenting_views": ["Test dissent"],
+        }
+        section = build_alternative_analysis_section(record)
+        assert "Alternative Analysis" in section
+
+
+class TestVerificationPipeline:
+    """Verification pipeline extracts and classifies claims."""
+
+    def test_extract_ioc_claims(self):
+        from lib.verification_pipeline import extract_claims_from_assessment
+
+        assessment = {
+            "diamond_model": {
+                "infrastructure": {"iocs": [{"type": "ipv4-addr", "value": "10.0.0.1"}]}
+            },
+            "key_judgments": [],
+        }
+        claims = extract_claims_from_assessment(assessment)
+        assert len(claims) >= 1
+
+    def test_classify_ioc_for_verification(self):
+        from lib.verification_pipeline import classify_claim_for_verification
+
+        claim = {"claim_type": "IOC", "ioc_type": "ipv4-addr"}
+        result = classify_claim_for_verification(claim)
+        assert result["strategy"] == "mcp_verification"
+
+    def test_hallucination_detection(self):
+        from lib.verification_pipeline import detect_hallucination_patterns
+
+        claims = [
+            {
+                "claim_id": "C1",
+                "sources_checked": [],
+                "verification_status": "UNVERIFIED",
+            },
+        ]
+        flags = detect_hallucination_patterns(claims)
+        assert len(flags) >= 1
+
+
+class TestAgentDefinitions:
+    """Agent definition files exist and are valid."""
+
+    def test_all_agent_definitions_exist(self):
+        agents_dir = PROJECT_ROOT / "agents" / "definitions"
+        expected = [
+            "collector.md",
+            "analyst.md",
+            "devils_advocate.md",
+            "verifier.md",
+            "reporter.md",
+        ]
+        for agent_file in expected:
+            assert (agents_dir / agent_file).exists(), (
+                f"Missing agent definition: {agent_file}"
+            )
+
+    def test_agent_definitions_have_frontmatter(self):
+        agents_dir = PROJECT_ROOT / "agents" / "definitions"
+        for md_file in agents_dir.glob("*.md"):
+            content = md_file.read_text()
+            assert content.startswith("---"), f"{md_file.name} missing frontmatter"
+
+
+class TestTeamConfig:
+    """Team configuration is valid."""
+
+    def test_team_config_exists(self):
+        config_file = CONFIG_DIR / "team_config.json"
+        assert config_file.exists()
+
+    def test_team_config_has_5_agents(self):
+        with open(CONFIG_DIR / "team_config.json") as f:
+            config = json.load(f)
+        assert len(config["agents"]) == 5
+
+    def test_team_config_pipeline_order(self):
+        with open(CONFIG_DIR / "team_config.json") as f:
+            config = json.load(f)
+        pipeline_agents = [
+            p["agent"] if "agent" in p else p["agents"][0] for p in config["pipeline"]
+        ]
+        assert pipeline_agents == [
+            "collector",
+            "analyst",
+            "devils-advocate",
+            "verifier",
+            "reporter",
+        ]
+
+    def test_orchestrate_team_skill_exists(self):
+        skill_file = SKILLS_DIR / "orchestrate-team" / "SKILL.md"
+        assert skill_file.exists()
