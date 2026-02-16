@@ -1,9 +1,4 @@
 """Tests for metrics collection."""
-import json
-from datetime import datetime, timezone
-from pathlib import Path
-
-import pytest
 
 from lib.metrics import (
     create_metric,
@@ -69,9 +64,7 @@ class TestSummarizeSessionMetrics:
             append_metric(
                 create_metric("sess-001", "iocs_enriched", 3 + i), metrics_file
             )
-        append_metric(
-            create_metric("sess-002", "iocs_enriched", 99), metrics_file
-        )
+        append_metric(create_metric("sess-002", "iocs_enriched", 99), metrics_file)
 
         summary = summarize_session_metrics("sess-001", metrics_file)
         assert summary["session_id"] == "sess-001"
