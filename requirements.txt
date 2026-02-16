@@ -1,0 +1,22 @@
+# Junior Threat Intel Agent - Python Dependencies
+# Install with: pip install -r requirements.txt
+
+# ===========================================
+# MCP Servers
+# ===========================================
+gti-mcp>=0.1.0
+feedly-mcp>=0.1.0
+# fastmcp-threatintel  # Uncomment if available on PyPI
+
+# ===========================================
+# Verification Agent
+# ===========================================
+httpx>=0.27.0
+pydantic>=2.0.0
+tenacity>=8.2.0
+python-dotenv>=1.0.0
+
+# ===========================================
+# Evaluation & Testing
+# ===========================================
+# No additional dependencies - uses stdlib only

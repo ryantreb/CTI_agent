@@ -1,0 +1,7 @@
+{
+  "_metadata": {
+    "description": "Queue for high-priority alerts requiring escalation",
+    "version": "1.0.0"
+  },
+  "pending_alerts": []
+}

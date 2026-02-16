@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "last_updated": null,
+  "skills": {
+    "monitor-feeds": {
+      "current_version": 0,
+      "versions": [
+        {
+          "version": 0,
+          "timestamp": null,
+          "status": "baseline",
+          "eval_scores": {},
+          "prompt_hash": null
+        }
+      ]
+    },
+    "enrich-iocs": {
+      "current_version": 0,
+      "versions": [
+        {
+          "version": 0,
+          "timestamp": null,
+          "status": "baseline",
+          "eval_scores": {},
+          "prompt_hash": null
+        }
+      ]
+    },
+    "verify-claims": {
+      "current_version": 0,
+      "versions": [
+        {
+          "version": 0,
+          "timestamp": null,
+          "status": "baseline",
+          "eval_scores": {},
+          "prompt_hash": null
+        }
+      ]
+    },
+    "diamond-model-analysis": {
+      "current_version": 0,
+      "versions": [
+        {
+          "version": 0,
+          "timestamp": null,
+          "status": "baseline",
+          "eval_scores": {},
+          "prompt_hash": null
+        }
+      ]
+    },
+    "analysis-competing-hypotheses": {
+      "current_version": 0,
+      "versions": [
+        {
+          "version": 0,
+          "timestamp": null,
+          "status": "baseline",
+          "eval_scores": {},
+          "prompt_hash": null
+        }
+      ]
+    },
+    "generate-report": {
+      "current_version": 0,
+      "versions": [
+        {
+          "version": 0,
+          "timestamp": null,
+          "status": "baseline",
+          "eval_scores": {},
+          "prompt_hash": null
+        }
+      ]
+    }
+  }
+}

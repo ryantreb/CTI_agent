@@ -1,0 +1,40 @@
+{
+  "feeds": [
+    {
+      "name": "CISA Alerts",
+      "url": "https://www.cisa.gov/cybersecurity-advisories/all.xml",
+      "category": "government",
+      "priority": "high",
+      "enabled": true
+    },
+    {
+      "name": "US-CERT",
+      "url": "https://www.cisa.gov/uscert/ncas/alerts.xml",
+      "category": "government",
+      "priority": "high",
+      "enabled": true
+    },
+    {
+      "name": "Krebs on Security",
+      "url": "https://krebsonsecurity.com/feed/",
+      "category": "blog",
+      "priority": "medium",
+      "enabled": true
+    },
+    {
+      "name": "The DFIR Report",
+      "url": "https://thedfirreport.com/feed/",
+      "category": "research",
+      "priority": "high",
+      "enabled": true
+    },
+    {
+      "name": "Mandiant Blog",
+      "url": "https://www.mandiant.com/resources/blog/rss.xml",
+      "category": "vendor",
+      "priority": "high",
+      "enabled": true
+    }
+  ],
+  "fallback_note": "Use these RSS feeds if Feedly MCP is unavailable"
+}

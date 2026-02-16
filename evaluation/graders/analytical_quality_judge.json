@@ -1,0 +1,85 @@
+{
+  "grader_name": "analytical_quality_judge",
+  "type": "llm_judge",
+  "model": "claude-sonnet-4-20250514",
+  "pass_threshold": 0.70,
+  
+  "system_prompt": "You are an expert intelligence analyst evaluator specializing in threat intelligence quality assessment. Your role is to evaluate analytical products against professional tradecraft standards used by intelligence agencies.\n\nYou will assess reports based on:\n1. Confidence calibration (proper use of ICD 203 probability language)\n2. Evidence-based judgments (claims supported by cited evidence)\n3. Analytical rigor (assumptions documented, alternatives considered)\n4. Completeness (required sections present, gaps acknowledged)\n5. Accuracy (no fabricated information, IOCs validated)\n\nProvide ONLY a numeric score between 0.0 and 1.0. No explanation.",
+  
+  "rubric": {
+    "1.0": {
+      "label": "Exemplary",
+      "criteria": [
+        "Proper ICD 203 confidence calibration throughout",
+        "Every judgment has explicit evidence basis",
+        "Key assumptions clearly documented",
+        "Intelligence gaps identified and acknowledged",
+        "No unsourced claims or fabricated information",
+        "Alternative hypotheses considered where appropriate",
+        "All required framework sections present"
+      ]
+    },
+    "0.75": {
+      "label": "Good",
+      "criteria": [
+        "Most confidence statements properly calibrated",
+        "Majority of judgments have evidence basis",
+        "Some assumptions documented",
+        "Minor gaps in reasoning chain or documentation",
+        "No fabricated information"
+      ]
+    },
+    "0.50": {
+      "label": "Adequate",
+      "criteria": [
+        "Basic report structure present",
+        "Some confidence language used but inconsistent",
+        "Assumptions not fully stated",
+        "Reasoning unclear in places",
+        "Missing some required sections"
+      ]
+    },
+    "0.25": {
+      "label": "Poor",
+      "criteria": [
+        "Missing key sections",
+        "Unsupported claims present",
+        "No confidence calibration",
+        "Assumptions not documented",
+        "Significant reasoning gaps"
+      ]
+    },
+    "0.0": {
+      "label": "Unacceptable",
+      "criteria": [
+        "Fabricated information detected",
+        "Fundamental contradictions",
+        "Completely off-topic or irrelevant",
+        "Dangerous misinformation"
+      ]
+    }
+  },
+  
+  "evaluation_prompt_template": "Evaluate this threat intelligence report for analytical quality.\n\n=== REPORT START ===\n{output}\n=== REPORT END ===\n\nScore this report from 0.0 to 1.0 based on the rubric criteria:\n- 1.0 = Exemplary (professional IC-grade tradecraft)\n- 0.75 = Good (minor gaps)\n- 0.50 = Adequate (basic structure but issues)\n- 0.25 = Poor (significant problems)\n- 0.0 = Unacceptable (fabrications or fundamental flaws)\n\nRespond with ONLY a decimal number between 0.0 and 1.0.",
+  
+  "quality_indicators": {
+    "positive": [
+      "Confidence: Highly likely",
+      "Confidence: Likely", 
+      "We assess with",
+      "based on",
+      "Key Assumptions",
+      "Intelligence Gaps",
+      "Source:",
+      "Evidence:"
+    ],
+    "negative": [
+      "We are certain",
+      "definitely",
+      "100%",
+      "no doubt",
+      "obviously",
+      "clearly" 
+    ]
+  }
+}

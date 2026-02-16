@@ -1,0 +1,35 @@
+{
+  "mcpServers": {
+    "feedly": {
+      "command": "uvx",
+      "args": ["feedly-mcp"],
+      "env": {
+        "FEEDLY_ACCESS_TOKEN": "${FEEDLY_ACCESS_TOKEN}"
+      },
+      "priority": 1,
+      "category": "intelligence",
+      "description": "Feedly Threat Intelligence - feeds, trending threats, actor profiles"
+    },
+    "gti": {
+      "command": "uvx",
+      "args": ["gti_mcp"],
+      "env": {
+        "VT_API_KEY": "${VT_API_KEY}"
+      },
+      "priority": 1,
+      "category": "enrichment",
+      "description": "Google Threat Intelligence (VirusTotal) - file/domain/IP analysis"
+    },
+    "fastmcp-threatintel": {
+      "command": "threatintel",
+      "args": ["server", "--port", "8001"],
+      "env": {
+        "VT_API_KEY": "${VT_API_KEY}",
+        "ABUSEIPDB_API_KEY": "${ABUSEIPDB_API_KEY}"
+      },
+      "priority": 2,
+      "category": "enrichment",
+      "description": "Multi-source IOC aggregation"
+    }
+  }
+}
