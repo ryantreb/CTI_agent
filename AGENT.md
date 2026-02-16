@@ -1,6 +1,6 @@
 # Junior Threat Intel Agent
 
-**Version**: 2.0.0  
+**Version**: 2.1.0
 **Codename**: JTIA  
 **Purpose**: Autonomous threat intelligence collection, analysis, and reporting with professional analytical tradecraft and continuous self-improvement.
 
@@ -293,4 +293,4 @@ Before executing any skills:
 
 ---
 
-*Junior Threat Intel Agent v2.0.0 — Self-evolving threat intelligence with professional analytical tradecraft.*
+*Junior Threat Intel Agent v2.1.0 — Self-evolving threat intelligence with professional analytical tradecraft.*
