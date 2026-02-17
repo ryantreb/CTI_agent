@@ -1,0 +1,182 @@
+{
+  "mcpServers": {
+    "feedly": {
+      "command": "uvx",
+      "args": [
+        "feedly-mcp"
+      ],
+      "env": {
+        "FEEDLY_ACCESS_TOKEN": "${FEEDLY_ACCESS_TOKEN}"
+      }
+    },
+    "gti": {
+      "command": "uvx",
+      "args": [
+        "gti_mcp"
+      ],
+      "env": {
+        "VT_API_KEY": "${VT_API_KEY}"
+      }
+    },
+    "fastmcp-threatintel": {
+      "command": "threatintel",
+      "args": [
+        "server",
+        "--port",
+        "8001"
+      ],
+      "env": {
+        "VT_API_KEY": "${VT_API_KEY}",
+        "ABUSEIPDB_API_KEY": "${ABUSEIPDB_API_KEY}"
+      }
+    },
+    "mcp-shodan": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-shodan"
+      ],
+      "env": {
+        "SHODAN_API_KEY": "${SHODAN_API_KEY}"
+      }
+    },
+    "otx-mcp": {
+      "command": "uvx",
+      "args": [
+        "otx-mcp"
+      ],
+      "env": {
+        "OTX_API_KEY": "${OTX_API_KEY}"
+      }
+    },
+    "mcp-threatintel": {
+      "command": "uvx",
+      "args": [
+        "mcp-threatintel"
+      ]
+    },
+    "ti-mindmap-hub-mcp": {
+      "command": "uvx",
+      "args": [
+        "ti-mindmap-hub-mcp"
+      ]
+    },
+    "mcp-security-orkl": {
+      "command": "uvx",
+      "args": [
+        "mcp-security"
+      ]
+    },
+    "mcp-censys": {
+      "command": "uvx",
+      "args": [
+        "mcp-censys"
+      ],
+      "env": {
+        "CENSYS_API_ID": "${CENSYS_API_ID}",
+        "CENSYS_API_SECRET": "${CENSYS_API_SECRET}"
+      }
+    },
+    "mallory-mcp-server": {
+      "command": "uvx",
+      "args": [
+        "mallory-mcp-server"
+      ],
+      "env": {
+        "MALLORY_API_KEY": "${MALLORY_API_KEY}"
+      }
+    },
+    "mcp-nvd": {
+      "command": "uvx",
+      "args": [
+        "mcp-nvd"
+      ]
+    },
+    "epss-mcp": {
+      "command": "uvx",
+      "args": [
+        "epss-mcp"
+      ]
+    },
+    "kev-mcp": {
+      "command": "uvx",
+      "args": [
+        "kev-mcp"
+      ]
+    },
+    "vulnerability-intelligence-mcp": {
+      "command": "uvx",
+      "args": [
+        "vulnerability-intelligence-mcp"
+      ]
+    },
+    "nuclei-mcp": {
+      "command": "uvx",
+      "args": [
+        "nuclei-mcp"
+      ]
+    },
+    "ghidra-mcp": {
+      "command": "python",
+      "args": [
+        "-m",
+        "ghidra_mcp"
+      ]
+    },
+    "yara-mcp": {
+      "command": "docker",
+      "args": [
+        "compose",
+        "up",
+        "yara-mcp",
+        "-d"
+      ]
+    },
+    "capa-mcp": {
+      "command": "docker",
+      "args": [
+        "compose",
+        "up",
+        "capa-mcp",
+        "-d"
+      ]
+    },
+    "radare2-mcp": {
+      "command": "docker",
+      "args": [
+        "compose",
+        "up",
+        "radare2-mcp",
+        "-d"
+      ]
+    },
+    "binwalk-mcp": {
+      "command": "docker",
+      "args": [
+        "compose",
+        "up",
+        "binwalk-mcp",
+        "-d"
+      ]
+    },
+    "mcp-dnstwist": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-dnstwist"
+      ]
+    },
+    "networksdb-mcp": {
+      "command": "uvx",
+      "args": [
+        "networksdb-mcp"
+      ]
+    },
+    "cyberchef-api-mcp": {
+      "command": "uvx",
+      "args": [
+        "cyberchef-api-mcp"
+      ]
+    }
+  }
+}

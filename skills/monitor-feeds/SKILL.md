@@ -10,23 +10,28 @@ Gather new threat intelligence from configured sources, deduplicate against proc
 
 ## MCP-Native Collection
 
-### Primary Source: Feedly Threat Intelligence
-```
-CALL feedly.get_trending_threats(
-  timeframe: "24h",
-  categories: ["apt", "ransomware", "vulnerability", "malware"]
-)
+### Collection Priority Order
+Sources are queried in order of availability. No single source is required — the skill
+degrades gracefully and merges results from whatever sources respond.
 
-FOR EACH threat IN response:
-  1. EXTRACT guid, title, published_date
-  2. CHECK against state/processed_guids.json
-  3. IF new:
-       EXTRACT iocs, ttps, threat_actors
-       ADD to enrichment_queue
-       LOG to memory/scratchpad.md
+### Feedly Threat Intelligence (paid subscription required)
+```
+IF feedly AVAILABLE (check-server-health confirmed):
+  CALL feedly.get_trending_threats(
+    timeframe: "24h",
+    categories: ["apt", "ransomware", "vulnerability", "malware"]
+  )
+
+  FOR EACH threat IN response:
+    1. EXTRACT guid, title, published_date
+    2. CHECK against state/processed_guids.json
+    3. IF new:
+         EXTRACT iocs, ttps, threat_actors
+         ADD to enrichment_queue
+         LOG to memory/scratchpad.md
 ```
 
-### Secondary Source: GTI Threat Collections
+### GTI Threat Collections
 ```
 CALL gti.search_threat_actors(query: "active:true")
 CALL gti.search_campaigns(query: "last_seen:>now-7d")

@@ -20,29 +20,29 @@ cp config/.env.template config/.env
 # Edit config/.env with your API keys
 ```
 
-**Required**:
-- `VT_API_KEY` — VirusTotal / Google Threat Intelligence
-- `FEEDLY_ACCESS_TOKEN` — Feedly Threat Intelligence
+13 of 23 MCP servers require **no API keys** and work immediately.
 
-**Optional** (enables additional enrichment):
-- `SHODAN_API_KEY` — Shodan
-- `OTX_API_KEY` — AlienVault OTX
-- `ABUSEIPDB_API_KEY` — AbuseIPDB
-- `CENSYS_API_ID` / `CENSYS_API_SECRET` — Censys
+**Recommended** (free tier available):
+- `VT_API_KEY` — VirusTotal / Google Threat Intelligence (1000 req/day)
+- `OTX_API_KEY` — AlienVault OTX (free, generous limits)
+- `ABUSEIPDB_API_KEY` — AbuseIPDB (1000 req/day)
+- `SHODAN_API_KEY` — Shodan (100 queries/month)
+
+**Optional**:
+- `CENSYS_API_ID` / `CENSYS_API_SECRET` — Censys (250 queries/month)
+- `FEEDLY_ACCESS_TOKEN` — Feedly Threat Intelligence (paid subscription required)
 - `MALLORY_API_KEY` — Mallory real-time threats
 
 ### MCP Server Setup
 
-```bash
-# Core (required)
-uvx feedly-mcp
-uvx gti_mcp
+Most servers auto-install via `uvx` when Claude Code loads `.mcp.json`. For manual installation:
 
-# Enrichment (recommended)
+```bash
+uvx gti_mcp
 pip install fastmcp-threatintel
 ```
 
-See `config/mcp_server_registry.json` for the full 23-server registry with install commands.
+See `config/mcp_server_registry.json` for the full 23-server registry.
 
 ## Directory Structure
 
