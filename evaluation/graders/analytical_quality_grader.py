@@ -197,7 +197,7 @@ def _heuristic_grade(output: str) -> Tuple[float, dict]:
         r"(?i)according\s+to",
         r"(?i)source[s]?:",
         r"(?i)reference[s]?:",
-        r"(?i)(?:gti|feedly|virustotal)\s+(?:analysis|report)",
+        r"(?i)(?:gti|virustotal|otx)\s+(?:analysis|report)",
         r"\[\d+\]",  # Numbered citations
     ]
     evidence_matches = sum(1 for p in evidence_patterns if re.search(p, output))

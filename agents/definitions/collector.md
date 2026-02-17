@@ -32,13 +32,12 @@ EXTRACT prior relevant reports, known actors, active campaigns
 ```
 CALL monitor-feeds
 COLLECT from ALL available sources in parallel:
-  - Feedly threat intelligence
   - GTI threat collections
   - AlienVault OTX pulses
-  - ORKL threat reports
-  - Mallory real-time threats (if available)
   - TI Mindmap HUB analysis
-  - CVE intelligence (NVD + KEV + EPSS)
+  - Mallory real-time threats (if available)
+  - mcp-threatintel (GreyNoise, abuse.ch feeds)
+  - CVE intelligence (KEV + Vulnerability Intelligence)
 DEDUPLICATE against state/processed_guids.json
 ```
 

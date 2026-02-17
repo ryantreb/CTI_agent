@@ -1,6 +1,6 @@
 ---
 name: enrich-iocs
-description: Multi-source IOC enrichment using dynamic routing across 23 MCP servers. Orchestrates queries through primary/secondary/fallback chains with graceful degradation when servers are unavailable.
+description: Multi-source IOC enrichment using dynamic routing across 17 MCP servers. Orchestrates queries through primary/secondary/fallback chains with graceful degradation when servers are unavailable.
 ---
 
 # Enrich IOCs Skill
@@ -17,11 +17,11 @@ Routing is determined by `config/mcp_server_registry.json`. The `check-server-he
 | IOC Type | Primary | Secondary | Fallback |
 |----------|---------|-----------|----------|
 | File Hash | gti | mcp-threatintel | — |
-| Domain | gti | mcp-censys, mcp-dnstwist | networksdb-mcp |
-| IP Address | gti, mcp-shodan | fastmcp-threatintel, mcp-threatintel | networksdb-mcp |
+| Domain | gti | mcp-dnstwist | — |
+| IP Address | gti, mcp-shodan | fastmcp-threatintel, mcp-threatintel | — |
 | URL | gti | mcp-threatintel | — |
-| CVE | mcp-nvd | epss-mcp, kev-mcp | vulnerability-intelligence-mcp |
-| Threat Actor | gti, feedly | otx-mcp, mcp-security-orkl | mallory-mcp-server |
+| CVE | vulnerability-intelligence-mcp | kev-mcp | — |
+| Threat Actor | gti | otx-mcp | mallory-mcp-server |
 
 ### Routing Protocol
 ```
@@ -62,9 +62,6 @@ FOR EACH ioc IN enrichment_queue:
 4. SECONDARY: CALL mcp-threatintel.lookup(hash)
    EXTRACT: abuse.ch MalwareBazaar data, ThreatFox associations
 
-5. IF threat_label identified:
-   CALL feedly.search_malware_family(threat_label)
-   EXTRACT: related_campaigns, threat_actors, ttps
 ```
 
 ### Domain Enrichment
@@ -78,10 +75,7 @@ FOR EACH ioc IN enrichment_queue:
 3. CALL gti.get_entities_related_to_a_domain(domain, "resolutions")
    EXTRACT: historical IP resolutions
 
-4. SECONDARY: CALL mcp-censys.search_certificates(domain)
-   EXTRACT: TLS certificates, related domains, infrastructure
-
-5. SECONDARY: CALL mcp-dnstwist.check(domain)
+4. SECONDARY: CALL mcp-dnstwist.check(domain)
    EXTRACT: typosquatting variants, phishing indicators
 ```
 
@@ -99,23 +93,15 @@ FOR EACH ioc IN enrichment_queue:
 4. SECONDARY: CALL mcp-threatintel.lookup(ip)
    EXTRACT: GreyNoise classification, abuse.ch Feodo tracker
 
-5. FALLBACK: CALL networksdb-mcp.lookup(ip)
-   EXTRACT: ASN, netblock, organization
 ```
 
 ### CVE Enrichment
 ```
-1. CALL mcp-nvd.get_cve(cve_id)
-   EXTRACT: description, cvss_score, cwe, affected_products
+1. CALL vulnerability-intelligence-mcp.analyze(cve_id)
+   EXTRACT: description, cvss_score, epss_score, exploit_detection
 
-2. CALL epss-mcp.get_score(cve_id)
-   EXTRACT: exploit_probability, percentile
-
-3. CALL kev-mcp.check(cve_id)
+2. CALL kev-mcp.check(cve_id)
    EXTRACT: in_kev_catalog, date_added, due_date
-
-4. FALLBACK: CALL vulnerability-intelligence-mcp.analyze(cve_id)
-   EXTRACT: unified CVE + EPSS + CVSS + exploit detection
 ```
 
 ### Threat Actor Enrichment
@@ -123,16 +109,10 @@ FOR EACH ioc IN enrichment_queue:
 1. CALL gti.search_threat_actors(actor_name)
    EXTRACT: aliases, attribution_country, ttps, infrastructure
 
-2. CALL feedly.get_actor_profile(actor_name)
-   EXTRACT: recent_activity, campaigns, targeted_sectors
-
-3. SECONDARY: CALL otx-mcp.get_pulses(actor_name)
+2. SECONDARY: CALL otx-mcp.get_pulses(actor_name)
    EXTRACT: community IOCs, related pulses
 
-4. SECONDARY: CALL mcp-security-orkl.search(actor_name)
-   EXTRACT: ORKL threat reports, historical analysis
-
-5. FALLBACK: CALL mallory-mcp-server.search(actor_name)
+3. FALLBACK: CALL mallory-mcp-server.search(actor_name)
    EXTRACT: real-time threat actor data
 ```
 
@@ -180,14 +160,10 @@ temporal_relevance = max(0, 1 - (days_old / 365))
       "greynoise": "malicious",
       "abuse_ch": {"feodo": false, "urlhaus": true}
     },
-    "nvd": {
+    "vulnerability-intelligence": {
       "cvss_score": 9.8,
       "epss_score": 0.87,
       "in_kev": true
-    },
-    "feedly": {
-      "threat_actors": ["FIN7"],
-      "campaigns": ["Campaign Name"]
     }
   },
   "confidence": 0.75,
@@ -214,9 +190,7 @@ temporal_relevance = max(0, 1 - (days_old / 365))
 |--------|-----------------|----------|
 | GTI (VirusTotal) | 1000/day | Queue overflow for next session |
 | Shodan | 100/month | Prioritize P1/P2 IOCs only |
-| Censys | 250/month | Use for domain enrichment only |
 | AbuseIPDB | 1000/day | Prioritize high-confidence IOCs |
-| NVD | 50/30s rolling | Batch CVE queries with delay |
 
 ## Cross-Validation Rules
 

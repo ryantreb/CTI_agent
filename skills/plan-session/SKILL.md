@@ -118,7 +118,7 @@ OUTPUT:
       "order": 1,
       "skill": "monitor-feeds",
       "purpose": "Collect intelligence on APT29 activity",
-      "mcp_servers_required": ["feedly", "gti"],
+      "mcp_servers_required": ["gti", "otx-mcp"],
       "expected_output": "Enrichment queue with relevant IOCs"
     }
   ],

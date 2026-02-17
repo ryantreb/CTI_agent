@@ -13,19 +13,19 @@ class TestConfigLoader:
         from lib.config import load_server_registry
 
         registry = load_server_registry()
-        assert len(registry["servers"]) >= 23
+        assert len(registry["servers"]) >= 17
 
     def test_get_servers_by_tier(self):
         from lib.config import get_servers_by_tier
 
         tier1 = get_servers_by_tier(1)
-        assert len(tier1) >= 10
+        assert len(tier1) >= 7
 
     def test_get_servers_by_category(self):
         from lib.config import get_servers_by_category
 
         vuln = get_servers_by_category("vulnerability")
-        assert len(vuln) >= 5
+        assert len(vuln) >= 3
 
     def test_get_routing_for_ioc_type(self):
         from lib.config import get_routing
@@ -53,5 +53,5 @@ class TestConfigLoader:
 
         config = generate_mcp_config()
         assert "mcpServers" in config
-        assert "feedly" in config["mcpServers"]
-        assert "command" in config["mcpServers"]["feedly"]
+        assert "gti" in config["mcpServers"]
+        assert "command" in config["mcpServers"]["gti"]

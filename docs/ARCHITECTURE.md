@@ -30,7 +30,7 @@ The system runs as a set of markdown instruction files (SKILL.md prompts) interp
                               │
                               ▼
                    ┌──────────────────┐
-                   │  23 MCP Servers  │
+                   │  17 MCP Servers  │
                    │  (External APIs) │
                    └──────────────────┘
 ```
@@ -67,7 +67,7 @@ graph LR
 
 All external data access goes through MCP (Model Context Protocol) servers — no direct API calls in skill prompts.
 
-**Rationale**: Standardized interface for 23 servers across 6 categories. Enables dynamic routing based on health checks and IOC type. Supports graceful degradation when servers are unavailable.
+**Rationale**: Standardized interface for 17 servers across 6 categories. Enables dynamic routing based on health checks and IOC type. Supports graceful degradation when servers are unavailable.
 
 ### AD-4: ICD 203 Compliance
 
@@ -143,15 +143,15 @@ Quality assessment graders:
 
 ### Layer 5: External Integration (MCP Servers)
 
-23 servers across 6 categories, configured in `config/mcp_server_registry.json`:
+17 servers across 6 categories, configured in `config/mcp_server_registry.json`:
 
 | Category | Count | Purpose |
 |----------|-------|---------|
-| Intelligence | 5 | Feed collection (Feedly, OTX, ORKL, TI Mindmap, Mallory) |
-| Enrichment | 5 | IOC enrichment (GTI, Shodan, Censys, Threatintel) |
-| Vulnerability | 5 | CVE intelligence (NVD, KEV, EPSS, Nuclei) |
+| Intelligence | 3 | Feed collection (OTX, TI Mindmap HUB, Mallory) |
+| Enrichment | 4 | IOC enrichment (GTI, Shodan, fastmcp-threatintel, mcp-threatintel) |
+| Vulnerability | 3 | CVE intelligence (KEV, Vulnerability Intelligence, Nuclei) |
 | Malware Analysis | 5 | Binary analysis (Ghidra, YARA, Capa, Radare2, Binwalk) |
-| OSINT | 2 | DNS and network recon (DNSTwist, NetworksDB) |
+| OSINT | 1 | DNS recon (DNSTwist) |
 | Utility | 1 | Data transformation (CyberChef) |
 
 ## Data Flow

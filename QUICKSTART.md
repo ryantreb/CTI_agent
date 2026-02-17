@@ -5,7 +5,7 @@
 ## Overview
 
 CTI Agent is a multi-agent cyber threat intelligence system that combines:
-- **23 MCP server integrations** across 6 categories (intelligence, enrichment, vulnerability, malware analysis, OSINT, utility)
+- **17 MCP server integrations** across 6 categories (intelligence, enrichment, vulnerability, malware analysis, OSINT, utility)
 - **5-agent team** with adversarial review and independent verification
 - **Professional analytical tradecraft** (Diamond Model, ACH, ATT&CK, ICD 203)
 - **Anti-hallucination verification** (5-tier claim validation with quarantine)
@@ -20,7 +20,7 @@ cp config/.env.template config/.env
 # Edit config/.env with your API keys
 ```
 
-13 of 23 MCP servers require **no API keys** and work immediately.
+11 of 17 MCP servers require **no API keys** and work immediately.
 
 **Recommended** (free tier available):
 - `VT_API_KEY` — VirusTotal / Google Threat Intelligence (1000 req/day)
@@ -28,9 +28,8 @@ cp config/.env.template config/.env
 - `ABUSEIPDB_API_KEY` — AbuseIPDB (1000 req/day)
 - `SHODAN_API_KEY` — Shodan (100 queries/month)
 
-**Optional**:
-- `CENSYS_API_ID` / `CENSYS_API_SECRET` — Censys (250 queries/month)
-- `FEEDLY_ACCESS_TOKEN` — Feedly Threat Intelligence (paid subscription required)
+**Optional** (free tier):
+- `TI_MINDMAP_API_KEY` — TI Mindmap HUB (free from ti-mindmap-hub.com)
 
 ### MCP Server Setup
 
@@ -41,7 +40,7 @@ uvx gti_mcp
 pip install fastmcp-threatintel
 ```
 
-See `config/mcp_server_registry.json` for the full 23-server registry.
+See `config/mcp_server_registry.json` for the full 17-server registry.
 
 ## Directory Structure
 

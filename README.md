@@ -2,7 +2,7 @@
 
 **Version**: 2.4.0
 
-Autonomous multi-agent cyber threat intelligence system with professional analytical tradecraft, 23 MCP server integrations, and built-in anti-hallucination verification.
+Autonomous multi-agent cyber threat intelligence system with professional analytical tradecraft, 17 MCP server integrations, and built-in anti-hallucination verification.
 
 ---
 
@@ -10,7 +10,7 @@ Autonomous multi-agent cyber threat intelligence system with professional analyt
 
 CTI Agent is a prompt-orchestrated, multi-agent threat intelligence system that:
 
-1. **Collects** threat intelligence from 23 MCP servers across 6 categories
+1. **Collects** threat intelligence from 17 MCP servers across 6 categories
 2. **Enriches** IOCs with multi-source data and dynamic routing
 3. **Analyzes** threats using Diamond Model and ACH frameworks
 4. **Challenges** assessments through adversarial Devil's Advocate debate
@@ -44,7 +44,7 @@ cp config/.env.template config/.env
 # Edit config/.env with your API keys
 ```
 
-13 of 23 MCP servers require **no API keys** and work immediately (vulnerability intel, abuse feeds, ORKL threat reports, DNS recon, and more).
+11 of 17 MCP servers require **no API keys** and work immediately (vulnerability intel, abuse feeds, DNS recon, and more).
 
 **Recommended Keys** (free tier available):
 - `VT_API_KEY` — VirusTotal / Google Threat Intelligence
@@ -52,9 +52,8 @@ cp config/.env.template config/.env
 - `ABUSEIPDB_API_KEY` — AbuseIPDB
 - `SHODAN_API_KEY` — Shodan
 
-**Optional Keys** (free tier or paid):
-- `CENSYS_API_ID` / `CENSYS_API_SECRET` — Censys
-- `FEEDLY_ACCESS_TOKEN` — Feedly Threat Intelligence (paid subscription)
+**Optional Keys** (free tier):
+- `TI_MINDMAP_API_KEY` — TI Mindmap HUB (free from ti-mindmap-hub.com)
 
 ### 2. Install MCP Servers
 
@@ -65,7 +64,7 @@ uvx gti_mcp
 pip install fastmcp-threatintel
 ```
 
-See `config/mcp_server_registry.json` for the full 23-server registry.
+See `config/mcp_server_registry.json` for the full 17-server registry.
 
 ### 3. Run the Agent
 
@@ -153,7 +152,7 @@ CTI_agent/
 │   └── logging_schema.py            #   Structured JSONL logging
 ├── evaluation/                      # Quality assessment graders
 ├── config/                          # Configuration
-│   ├── mcp_server_registry.json     #   23 MCP servers (source of truth)
+│   ├── mcp_server_registry.json     #   17 MCP servers (source of truth)
 │   ├── mcp_config.json              #   Claude Code MCP config (generated)
 │   ├── team_config.json             #   Multi-agent pipeline config
 │   ├── skill_ownership.json         #   Skill conflict resolution
@@ -169,15 +168,15 @@ CTI_agent/
 
 ## MCP Server Integrations
 
-23 servers across 6 categories with dynamic routing and graceful degradation:
+17 servers across 6 categories with dynamic routing and graceful degradation:
 
 | Category | Servers | Purpose |
 |----------|---------|---------|
-| **Intelligence** | Feedly, OTX, ORKL, TI Mindmap HUB, Mallory | Threat feed collection |
-| **Enrichment** | GTI/VirusTotal, Shodan, Censys, fastmcp-threatintel | IOC enrichment |
-| **Vulnerability** | NVD, KEV, EPSS, Vulnerability Intelligence, Nuclei | CVE intelligence |
+| **Intelligence** | OTX, TI Mindmap HUB, Mallory | Threat feed collection |
+| **Enrichment** | GTI/VirusTotal, Shodan, fastmcp-threatintel, mcp-threatintel | IOC enrichment |
+| **Vulnerability** | KEV, Vulnerability Intelligence, Nuclei | CVE intelligence |
 | **Malware Analysis** | Ghidra, YARA, Capa, Radare2, Binwalk | Binary analysis |
-| **OSINT** | DNSTwist, NetworksDB | DNS + network recon |
+| **OSINT** | DNSTwist | DNS recon |
 | **Utility** | CyberChef | Data transformation |
 
 IOC routing is configured per type (IP, domain, hash, URL, CVE) with primary/secondary/fallback chains. The `check-server-health` skill adjusts routing at session start based on available API keys and server status.
@@ -298,14 +297,14 @@ See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for the full development guide an
 | **v2.4.0** | Multi-agent team (5 agents), debate engine, verification pipeline |
 | v2.3.0 | Confidence decay, actor profiles, Pinecone memory, metrics |
 | v2.2.0 | STIX 2.1 builder, ATT&CK layers, external skills, demo dataset |
-| v2.1.0 | 23 MCP servers, dynamic routing, health checks, evaluation graders |
+| v2.1.0 | MCP server integrations, dynamic routing, health checks, evaluation graders |
 
 ---
 
 ## Roadmap
 
 - [x] Core architecture + skills
-- [x] 23 MCP server integrations with dynamic routing
+- [x] 17 MCP server integrations with dynamic routing
 - [x] STIX 2.1 + ATT&CK Navigator output
 - [x] External skill integration (malware analysis, YARA, Trail of Bits)
 - [x] Confidence decay + threat actor profiles

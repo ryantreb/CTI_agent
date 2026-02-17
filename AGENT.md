@@ -241,15 +241,15 @@ Collector → Analyst → [Devil's Advocate ↔ Analyst debate] → Verifier →
 
 ## MCP Server Registry
 
-**Source of truth**: `config/mcp_server_registry.json` (23 servers across 6 categories)
+**Source of truth**: `config/mcp_server_registry.json` (17 servers across 6 categories)
 
 | Category | Count | Examples |
 |----------|-------|---------|
-| Intelligence | 5 | feedly, otx-mcp, mcp-security-orkl, ti-mindmap-hub-mcp, mallory-mcp-server |
-| Enrichment | 5 | gti, fastmcp-threatintel, mcp-shodan, mcp-threatintel, mcp-censys |
-| Vulnerability | 5 | mcp-nvd, epss-mcp, kev-mcp, vulnerability-intelligence-mcp, nuclei-mcp |
+| Intelligence | 3 | otx-mcp, ti-mindmap-hub-mcp, mallory-mcp-server |
+| Enrichment | 4 | gti, fastmcp-threatintel, mcp-shodan, mcp-threatintel |
+| Vulnerability | 3 | kev-mcp, vulnerability-intelligence-mcp, nuclei-mcp |
 | Malware Analysis | 5 | ghidra-mcp, yara-mcp, capa-mcp, radare2-mcp, binwalk-mcp |
-| OSINT | 2 | mcp-dnstwist, networksdb-mcp |
+| OSINT | 1 | mcp-dnstwist |
 | Utility | 1 | cyberchef-api-mcp |
 
 ### MCP Tool Selection Logic (Dynamic Routing)

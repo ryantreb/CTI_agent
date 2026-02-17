@@ -73,7 +73,7 @@ class TestHealthCheckNoKeys:
         # Clear all API key env vars so health check runs in degraded mode
         for key in (
             "VT_API_KEY",
-            "FEEDLY_ACCESS_TOKEN",
+            "TI_MINDMAP_API_KEY",
             "SHODAN_API_KEY",
             "OTX_API_KEY",
             "ABUSEIPDB_API_KEY",
@@ -85,7 +85,7 @@ class TestHealthCheckNoKeys:
 
         report = run_health_check()
         assert "total_servers" in report
-        assert report["total_servers"] >= 23
+        assert report["total_servers"] >= 17
         assert "missing_keys" in report
         assert isinstance(report["degraded_capabilities"], list)
         assert report["unavailable_count"] > 0  # No keys set = some unavailable
@@ -379,7 +379,7 @@ class TestTeamDataSchemas:
             ioc_type="ip", value="10.0.0.1", confidence=0.85, sources=["gti"]
         )
         bundle = create_collection_bundle(
-            session_id="test", sources_queried=["feedly"], enriched_iocs=[ioc]
+            session_id="test", sources_queried=["gti"], enriched_iocs=[ioc]
         )
         assert bundle["type"] == "collection_bundle"
         assert bundle["ioc_count"] == 1

@@ -1,14 +1,5 @@
 {
   "mcpServers": {
-    "feedly": {
-      "command": "uvx",
-      "args": [
-        "feedly-mcp"
-      ],
-      "env": {
-        "FEEDLY_ACCESS_TOKEN": "${FEEDLY_ACCESS_TOKEN}"
-      }
-    },
     "gti": {
       "command": "uvx",
       "args": [
@@ -34,77 +25,67 @@
       "command": "npx",
       "args": [
         "-y",
-        "mcp-shodan"
+        "@burtthecoder/mcp-shodan"
       ],
       "env": {
         "SHODAN_API_KEY": "${SHODAN_API_KEY}"
       }
     },
     "otx-mcp": {
-      "command": "uvx",
+      "command": "docker",
       "args": [
-        "otx-mcp"
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "OTX_API_KEY",
+        "ghcr.io/mrwadams/otx-mcp:main"
       ],
       "env": {
         "OTX_API_KEY": "${OTX_API_KEY}"
       }
     },
     "mcp-threatintel": {
-      "command": "uvx",
+      "command": "npx",
       "args": [
-        "mcp-threatintel"
+        "-y",
+        "mcp-threatintel-server"
       ]
     },
     "ti-mindmap-hub-mcp": {
-      "command": "uvx",
+      "command": "npx",
       "args": [
-        "ti-mindmap-hub-mcp"
-      ]
-    },
-    "mcp-security-orkl": {
-      "command": "uvx",
-      "args": [
-        "mcp-security"
-      ]
-    },
-    "mcp-censys": {
-      "command": "uvx",
-      "args": [
-        "--from", "git+https://github.com/ryantreb/mcp-censys.git",
-        "python", "main.py"
+        "-y",
+        "mcp-remote",
+        "https://mcp.ti-mindmap-hub.com/mcp"
       ],
       "env": {
-        "CENSYS_PAT": "${CENSYS_PAT}"
+        "TI_MINDMAP_API_KEY": "${TI_MINDMAP_API_KEY}"
       }
     },
-    "mcp-nvd": {
-      "command": "uvx",
-      "args": [
-        "mcp-nvd"
-      ]
-    },
-    "epss-mcp": {
-      "command": "uvx",
-      "args": [
-        "epss-mcp"
-      ]
-    },
     "kev-mcp": {
-      "command": "uvx",
+      "command": "npx",
       "args": [
-        "kev-mcp"
+        "-y",
+        "mcp-remote",
+        "https://amcipi.com/cisa-kev/mcp"
       ]
     },
     "vulnerability-intelligence-mcp": {
       "command": "uvx",
       "args": [
-        "vulnerability-intelligence-mcp"
+        "--from",
+        "git+https://github.com/firetix/vulnerability-intelligence-mcp-server.git",
+        "mcp-simple-tool",
+        "--transport",
+        "stdio"
       ]
     },
     "nuclei-mcp": {
-      "command": "uvx",
+      "command": "go",
       "args": [
-        "nuclei-mcp"
+        "run",
+        "github.com/addcontent/nuclei-mcp/cmd/nuclei-mcp@latest"
       ]
     },
     "ghidra-mcp": {
@@ -154,19 +135,14 @@
       "command": "npx",
       "args": [
         "-y",
-        "mcp-dnstwist"
-      ]
-    },
-    "networksdb-mcp": {
-      "command": "uvx",
-      "args": [
-        "networksdb-mcp"
+        "@burtthecoder/mcp-dnstwist"
       ]
     },
     "cyberchef-api-mcp": {
       "command": "uvx",
       "args": [
-        "cyberchef-api-mcp"
+        "--from", "git+https://github.com/slouchd/cyberchef-api-mcp-server.git",
+        "cyberchef-api-mcp-server"
       ]
     }
   }

@@ -17,7 +17,6 @@ CAPABILITY_MAP = {
     "otx-mcp": "AlienVault OTX community threat intelligence",
     "mallory-mcp-server": "Real-time threat actor and malware data via Mallory",
     "gti": "VirusTotal file/domain/IP analysis (core enrichment)",
-    "feedly": "Feedly threat intelligence feeds (core collection)",
     "fastmcp-threatintel": "Multi-source IOC aggregation (AbuseIPDB, VirusTotal)",
     "ghidra-mcp": "Binary decompilation and reverse engineering",
     "yara-mcp": "YARA malware signature matching",

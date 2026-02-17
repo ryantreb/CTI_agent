@@ -9,7 +9,7 @@ class TestHealthReport:
         from lib.health_check import create_health_report
 
         report = create_health_report(
-            available=["gti", "mcp-nvd"],
+            available=["gti", "mcp-threatintel"],
             unavailable=["mcp-shodan"],
             missing_keys=["SHODAN_API_KEY"],
             degraded_capabilities=["IP enrichment via Shodan unavailable"],

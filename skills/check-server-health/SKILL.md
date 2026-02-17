@@ -72,21 +72,20 @@ UPDATE state/active_context.md with server availability
   "skill": "check-server-health",
   "timestamp": "ISO8601",
   "health": {
-    "total_servers": 23,
-    "available_count": 19,
-    "unavailable_count": 4,
-    "health_percentage": 82.6,
-    "available_servers": ["gti", "feedly", "mcp-nvd", "..."],
-    "unavailable_servers": ["mcp-shodan", "mcp-censys", "..."],
-    "missing_keys": ["SHODAN_API_KEY", "CENSYS_API_ID"],
+    "total_servers": 17,
+    "available_count": 14,
+    "unavailable_count": 3,
+    "health_percentage": 82.4,
+    "available_servers": ["gti", "otx-mcp", "mcp-threatintel", "..."],
+    "unavailable_servers": ["mcp-shodan", "..."],
+    "missing_keys": ["SHODAN_API_KEY"],
     "degraded_capabilities": [
-      "IP enrichment via Shodan unavailable",
-      "Certificate transparency via Censys unavailable"
+      "IP enrichment via Shodan unavailable"
     ]
   },
   "adjusted_routing": {
-    "ip": {"primary": ["gti"], "secondary": ["fastmcp-threatintel"], "fallback": ["networksdb-mcp"]},
-    "domain": {"primary": ["gti"], "secondary": ["mcp-dnstwist"], "fallback": ["networksdb-mcp"]}
+    "ip": {"primary": ["gti"], "secondary": ["fastmcp-threatintel", "mcp-threatintel"], "fallback": []},
+    "domain": {"primary": ["gti"], "secondary": ["mcp-dnstwist"], "fallback": []}
   }
 }
 ```

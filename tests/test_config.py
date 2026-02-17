@@ -19,7 +19,7 @@ class TestMcpServerRegistry:
 
     def test_registry_has_servers(self, registry):
         assert "servers" in registry
-        assert len(registry["servers"]) >= 23
+        assert len(registry["servers"]) >= 17
 
     def test_each_server_has_required_fields(self, registry):
         required = {"name", "repo", "command", "category", "tier", "requires_api_key"}

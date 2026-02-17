@@ -18,10 +18,10 @@ class TestCollectionBundle:
     def test_create_collection_bundle_minimal(self):
         bundle = create_collection_bundle(
             session_id="test-session",
-            sources_queried=["feedly", "otx"],
+            sources_queried=["gti", "otx"],
         )
         assert bundle["session_id"] == "test-session"
-        assert bundle["sources_queried"] == ["feedly", "otx"]
+        assert bundle["sources_queried"] == ["gti", "otx"]
         assert bundle["enriched_iocs"] == []
         assert bundle["raw_items"] == []
         assert "timestamp" in bundle
@@ -35,7 +35,7 @@ class TestCollectionBundle:
         )
         bundle = create_collection_bundle(
             session_id="test-session",
-            sources_queried=["feedly"],
+            sources_queried=["gti"],
             enriched_iocs=[ioc],
         )
         assert len(bundle["enriched_iocs"]) == 1

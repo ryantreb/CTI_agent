@@ -33,7 +33,6 @@ uv pip install -r requirements.txt
 Only needed if testing live MCP integration:
 
 ```bash
-uvx feedly-mcp    # Feedly TI
 uvx gti_mcp       # Google Threat Intelligence / VirusTotal
 ```
 

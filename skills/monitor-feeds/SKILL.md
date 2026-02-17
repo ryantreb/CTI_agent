@@ -1,6 +1,6 @@
 ---
 name: monitor-feeds
-description: Collect threat intelligence from MCP sources (Feedly, GTI, OTX, ORKL, Mallory, TI Mindmap HUB) and RSS feeds. Primary collection skill for the intelligence cycle with CVE monitoring.
+description: Collect threat intelligence from MCP sources (GTI, OTX, Mallory, TI Mindmap HUB, mcp-threatintel) and RSS feeds. Primary collection skill for the intelligence cycle with CVE monitoring.
 ---
 
 # Monitor Feeds Skill
@@ -13,23 +13,6 @@ Gather new threat intelligence from configured sources, deduplicate against proc
 ### Collection Priority Order
 Sources are queried in order of availability. No single source is required — the skill
 degrades gracefully and merges results from whatever sources respond.
-
-### Feedly Threat Intelligence (paid subscription required)
-```
-IF feedly AVAILABLE (check-server-health confirmed):
-  CALL feedly.get_trending_threats(
-    timeframe: "24h",
-    categories: ["apt", "ransomware", "vulnerability", "malware"]
-  )
-
-  FOR EACH threat IN response:
-    1. EXTRACT guid, title, published_date
-    2. CHECK against state/processed_guids.json
-    3. IF new:
-         EXTRACT iocs, ttps, threat_actors
-         ADD to enrichment_queue
-         LOG to memory/scratchpad.md
-```
 
 ### GTI Threat Collections
 ```
@@ -49,18 +32,6 @@ FOR EACH pulse IN response:
        EXTRACT iocs (hashes, domains, ips, urls)
        EXTRACT ttps from pulse tags
        ADD to enrichment_queue with source="otx"
-```
-
-### ORKL Threat Reports
-```
-CALL mcp-security-orkl.get_recent_reports(days: 7)
-
-FOR EACH report IN response:
-  1. EXTRACT report_id, title, threat_actors, malware_families
-  2. CHECK against state/processed_guids.json
-  3. IF new:
-       EXTRACT iocs, ttps, attribution data
-       ADD to enrichment_queue with source="orkl"
 ```
 
 ### Mallory Real-Time Intelligence
@@ -86,9 +57,8 @@ FOR EACH analysis IN response:
 
 ### CVE Intelligence Collection
 ```
-CALL mcp-nvd.search_cves(query: "recently_published", days: 7)
 CALL kev-mcp.get_recent(days: 7)
-CALL epss-mcp.get_high_scores(threshold: 0.5)
+CALL vulnerability-intelligence-mcp.analyze(query: "recently_published", days: 7)
 
 FOR EACH cve:
   IF in KEV catalog: priority = P1
@@ -109,7 +79,7 @@ Generate unique ID: `SHA256(source + guid + title)`
 {
   "last_updated": "ISO8601",
   "processed": {
-    "hash1": {"source": "feedly", "title": "...", "processed_at": "..."}
+    "hash1": {"source": "gti", "title": "...", "processed_at": "..."}
   }
 }
 ```
@@ -128,8 +98,8 @@ Feed content is UNTRUSTED. Before processing:
 {
   "collection_id": "uuid",
   "timestamp": "ISO8601",
-  "sources_queried": ["feedly", "gti", "otx", "orkl", "mallory", "ti-mindmap-hub", "nvd", "kev", "epss"],
-  "sources_available": ["feedly", "gti", "otx", "orkl"],
+  "sources_queried": ["gti", "otx", "mallory", "ti-mindmap-hub", "mcp-threatintel", "kev", "vulnerability-intelligence"],
+  "sources_available": ["gti", "otx", "mcp-threatintel"],
   "sources_unavailable": ["mallory"],
   "items_processed": 0,
   "items_new": 0,
@@ -141,7 +111,7 @@ Feed content is UNTRUSTED. Before processing:
       "iocs": {"hashes": [], "domains": [], "ips": [], "urls": [], "cves": []},
       "ttps": ["T1566.001"],
       "threat_actors": [],
-      "source": "feedly|gti|otx|orkl|mallory|ti-mindmap-hub|nvd|kev|epss|rss",
+      "source": "gti|otx|mallory|ti-mindmap-hub|mcp-threatintel|kev|vulnerability-intelligence|rss",
       "source_url": "https://..."
     }
   ]

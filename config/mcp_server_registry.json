@@ -3,19 +3,6 @@
   "description": "CTI Agent MCP Server Registry - single source of truth for all server configurations",
   "servers": [
     {
-      "name": "feedly",
-      "repo": "https://github.com/feedly/feedly-mcp",
-      "command": "uvx",
-      "args": ["feedly-mcp"],
-      "env": {"FEEDLY_ACCESS_TOKEN": "${FEEDLY_ACCESS_TOKEN}"},
-      "category": "intelligence",
-      "tier": 1,
-      "requires_api_key": true,
-      "api_key_env_var": "FEEDLY_ACCESS_TOKEN",
-      "description": "Feedly Threat Intelligence - feeds, trending threats, actor profiles",
-      "rate_limit": {"requests_per_day": null, "notes": "Enterprise plan"}
-    },
-    {
       "name": "gti",
       "repo": "https://github.com/google/mcp-security",
       "command": "uvx",
@@ -45,7 +32,7 @@
       "name": "mcp-shodan",
       "repo": "https://github.com/BurtTheCoder/mcp-shodan",
       "command": "npx",
-      "args": ["-y", "mcp-shodan"],
+      "args": ["-y", "@burtthecoder/mcp-shodan"],
       "env": {"SHODAN_API_KEY": "${SHODAN_API_KEY}"},
       "category": "enrichment",
       "tier": 1,
@@ -57,21 +44,22 @@
     {
       "name": "otx-mcp",
       "repo": "https://github.com/mrwadams/otx-mcp",
-      "command": "uvx",
-      "args": ["otx-mcp"],
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "-e", "OTX_API_KEY", "ghcr.io/mrwadams/otx-mcp:main"],
       "env": {"OTX_API_KEY": "${OTX_API_KEY}"},
       "category": "intelligence",
       "tier": 1,
       "requires_api_key": true,
+      "requires_docker": true,
       "api_key_env_var": "OTX_API_KEY",
       "description": "AlienVault OTX community threat intelligence",
-      "rate_limit": {"requests_per_day": null, "notes": "Free, generous limits"}
+      "rate_limit": {"requests_per_day": null, "notes": "Free, generous limits. Requires docker pull ghcr.io/mrwadams/otx-mcp:main"}
     },
     {
       "name": "mcp-threatintel",
       "repo": "https://github.com/aplaceforallmystuff/mcp-threatintel",
-      "command": "uvx",
-      "args": ["mcp-threatintel"],
+      "command": "npx",
+      "args": ["-y", "mcp-threatintel-server"],
       "env": {},
       "category": "enrichment",
       "tier": 1,
@@ -82,39 +70,15 @@
     {
       "name": "ti-mindmap-hub-mcp",
       "repo": "https://github.com/TI-Mindmap-HUB-Org/ti-mindmap-hub-mcp",
-      "command": "uvx",
-      "args": ["ti-mindmap-hub-mcp"],
-      "env": {},
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.ti-mindmap-hub.com/mcp"],
+      "env": {"TI_MINDMAP_API_KEY": "${TI_MINDMAP_API_KEY}"},
       "category": "intelligence",
-      "tier": 1,
-      "requires_api_key": false,
-      "description": "Automated report analysis, STIX 2.1 gen, IOC extraction, CVE intel",
-      "rate_limit": {"requests_per_day": null, "notes": "Local processing"}
-    },
-    {
-      "name": "mcp-security-orkl",
-      "repo": "https://github.com/fr0gger/MCP_Security",
-      "command": "uvx",
-      "args": ["mcp-security"],
-      "env": {},
-      "category": "intelligence",
-      "tier": 1,
-      "requires_api_key": false,
-      "description": "ORKL threat reports and actor analysis",
-      "rate_limit": {"requests_per_day": null, "notes": "Public API"}
-    },
-    {
-      "name": "mcp-censys",
-      "repo": "https://github.com/nickpending/mcp-censys",
-      "command": "uvx",
-      "args": ["mcp-censys"],
-      "env": {"CENSYS_API_ID": "${CENSYS_API_ID}", "CENSYS_API_SECRET": "${CENSYS_API_SECRET}"},
-      "category": "enrichment",
       "tier": 1,
       "requires_api_key": true,
-      "api_key_env_var": "CENSYS_API_ID",
-      "description": "Certificate transparency, attack surface mapping",
-      "rate_limit": {"requests_per_month": 250, "notes": "Free tier"}
+      "api_key_env_var": "TI_MINDMAP_API_KEY",
+      "description": "TI Mindmap HUB - report analysis, STIX 2.1 gen, IOC extraction, CVE intel, weekly briefings",
+      "rate_limit": {"requests_per_day": null, "notes": "Remote hosted service, requires free API key from ti-mindmap-hub.com"}
     },
     {
       "name": "mallory-mcp-server",
@@ -130,46 +94,22 @@
       "rate_limit": {"requests_per_day": null, "notes": "Check provider"}
     },
     {
-      "name": "mcp-nvd",
-      "repo": "https://github.com/marcoeg/mcp-nvd",
-      "command": "uvx",
-      "args": ["mcp-nvd"],
-      "env": {},
-      "category": "vulnerability",
-      "tier": 2,
-      "requires_api_key": false,
-      "description": "NIST NVD CVE lookups, CVSS scores",
-      "rate_limit": {"requests_per_30s": 50, "notes": "NVD public API rolling window"}
-    },
-    {
-      "name": "epss-mcp",
-      "repo": "https://github.com/jgamblin/EPSS-MCP",
-      "command": "uvx",
-      "args": ["epss-mcp"],
-      "env": {},
-      "category": "vulnerability",
-      "tier": 2,
-      "requires_api_key": false,
-      "description": "Exploit Prediction Scoring System",
-      "rate_limit": {"requests_per_day": null, "notes": "Public API"}
-    },
-    {
       "name": "kev-mcp",
       "repo": "https://github.com/yeger00/kev-mcp",
-      "command": "uvx",
-      "args": ["kev-mcp"],
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://amcipi.com/cisa-kev/mcp"],
       "env": {},
       "category": "vulnerability",
       "tier": 2,
       "requires_api_key": false,
       "description": "CISA Known Exploited Vulnerabilities catalog",
-      "rate_limit": {"requests_per_day": null, "notes": "Public catalog"}
+      "rate_limit": {"requests_per_day": null, "notes": "Remote hosted service, public catalog"}
     },
     {
       "name": "vulnerability-intelligence-mcp",
       "repo": "https://github.com/firetix/vulnerability-intelligence-mcp-server",
       "command": "uvx",
-      "args": ["vulnerability-intelligence-mcp"],
+      "args": ["--from", "git+https://github.com/firetix/vulnerability-intelligence-mcp-server.git", "mcp-simple-tool", "--transport", "stdio"],
       "env": {},
       "category": "vulnerability",
       "tier": 2,
@@ -180,14 +120,15 @@
     {
       "name": "nuclei-mcp",
       "repo": "https://github.com/addcontent/nuclei-mcp",
-      "command": "uvx",
-      "args": ["nuclei-mcp"],
+      "command": "go",
+      "args": ["run", "github.com/addcontent/nuclei-mcp/cmd/nuclei-mcp@latest"],
       "env": {},
       "category": "vulnerability",
       "tier": 2,
       "requires_api_key": false,
-      "description": "Active vulnerability scanning with 8000+ Nuclei templates",
-      "rate_limit": {"requests_per_day": null, "notes": "Local scanning"}
+      "requires_go": true,
+      "description": "Active vulnerability scanning with Nuclei templates",
+      "rate_limit": {"requests_per_day": null, "notes": "Local scanning, requires Go toolchain"}
     },
     {
       "name": "ghidra-mcp",
@@ -210,6 +151,7 @@
       "category": "malware-analysis",
       "tier": 3,
       "requires_api_key": false,
+      "requires_docker_compose": true,
       "description": "YARA malware signature matching and classification",
       "rate_limit": {"requests_per_day": null, "notes": "Local tool"}
     },
@@ -222,6 +164,7 @@
       "category": "malware-analysis",
       "tier": 3,
       "requires_api_key": false,
+      "requires_docker_compose": true,
       "description": "Executable capability detection (maps to ATT&CK)",
       "rate_limit": {"requests_per_day": null, "notes": "Local tool"}
     },
@@ -234,6 +177,7 @@
       "category": "malware-analysis",
       "tier": 3,
       "requires_api_key": false,
+      "requires_docker_compose": true,
       "description": "Disassembly, decompilation, binary analysis",
       "rate_limit": {"requests_per_day": null, "notes": "Local tool"}
     },
@@ -246,6 +190,7 @@
       "category": "malware-analysis",
       "tier": 3,
       "requires_api_key": false,
+      "requires_docker_compose": true,
       "description": "Firmware analysis, file extraction, signature scanning",
       "rate_limit": {"requests_per_day": null, "notes": "Local tool"}
     },
@@ -253,7 +198,7 @@
       "name": "mcp-dnstwist",
       "repo": "https://github.com/BurtTheCoder/mcp-dnstwist",
       "command": "npx",
-      "args": ["-y", "mcp-dnstwist"],
+      "args": ["-y", "@burtthecoder/mcp-dnstwist"],
       "env": {},
       "category": "osint",
       "tier": 4,
@@ -262,22 +207,10 @@
       "rate_limit": {"requests_per_day": null, "notes": "Local DNS queries"}
     },
     {
-      "name": "networksdb-mcp",
-      "repo": "https://github.com/MorDavid/NetworksDB-MCP",
-      "command": "uvx",
-      "args": ["networksdb-mcp"],
-      "env": {},
-      "category": "osint",
-      "tier": 4,
-      "requires_api_key": false,
-      "description": "IP, ASN, and DNS record lookups",
-      "rate_limit": {"requests_per_day": null, "notes": "Public API"}
-    },
-    {
       "name": "cyberchef-api-mcp",
       "repo": "https://github.com/slouchd/cyberchef-api-mcp-server",
       "command": "uvx",
-      "args": ["cyberchef-api-mcp"],
+      "args": ["--from", "git+https://github.com/slouchd/cyberchef-api-mcp-server.git", "cyberchef-api-mcp-server"],
       "env": {},
       "category": "utility",
       "tier": 4,
@@ -290,12 +223,12 @@
     "ip": {
       "primary": ["gti", "mcp-shodan"],
       "secondary": ["fastmcp-threatintel", "mcp-threatintel"],
-      "fallback": ["networksdb-mcp"]
+      "fallback": []
     },
     "domain": {
       "primary": ["gti"],
-      "secondary": ["mcp-censys", "mcp-dnstwist"],
-      "fallback": ["networksdb-mcp"]
+      "secondary": ["mcp-dnstwist"],
+      "fallback": []
     },
     "hash": {
       "primary": ["gti"],
@@ -308,13 +241,13 @@
       "fallback": []
     },
     "cve": {
-      "primary": ["mcp-nvd"],
-      "secondary": ["epss-mcp", "kev-mcp"],
-      "fallback": ["vulnerability-intelligence-mcp"]
+      "primary": ["vulnerability-intelligence-mcp"],
+      "secondary": ["kev-mcp"],
+      "fallback": []
     },
     "threat_actor": {
-      "primary": ["gti", "feedly"],
-      "secondary": ["otx-mcp", "mcp-security-orkl"],
+      "primary": ["gti"],
+      "secondary": ["otx-mcp"],
       "fallback": ["mallory-mcp-server"]
     }
   }
