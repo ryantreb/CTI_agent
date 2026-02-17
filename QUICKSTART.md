@@ -31,7 +31,6 @@ cp config/.env.template config/.env
 **Optional**:
 - `CENSYS_API_ID` / `CENSYS_API_SECRET` — Censys (250 queries/month)
 - `FEEDLY_ACCESS_TOKEN` — Feedly Threat Intelligence (paid subscription required)
-- `MALLORY_API_KEY` — Mallory real-time threats
 
 ### MCP Server Setup
 

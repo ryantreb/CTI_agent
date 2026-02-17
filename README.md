@@ -55,7 +55,6 @@ cp config/.env.template config/.env
 **Optional Keys** (free tier or paid):
 - `CENSYS_API_ID` / `CENSYS_API_SECRET` — Censys
 - `FEEDLY_ACCESS_TOKEN` — Feedly Threat Intelligence (paid subscription)
-- `MALLORY_API_KEY` — Mallory real-time threats
 
 ### 2. Install MCP Servers
 

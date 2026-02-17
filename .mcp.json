@@ -77,15 +77,6 @@
         "CENSYS_API_SECRET": "${CENSYS_API_SECRET}"
       }
     },
-    "mallory-mcp-server": {
-      "command": "uvx",
-      "args": [
-        "mallory-mcp-server"
-      ],
-      "env": {
-        "MALLORY_API_KEY": "${MALLORY_API_KEY}"
-      }
-    },
     "mcp-nvd": {
       "command": "uvx",
       "args": [
