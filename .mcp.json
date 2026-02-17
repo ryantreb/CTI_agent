@@ -70,11 +70,11 @@
     "mcp-censys": {
       "command": "uvx",
       "args": [
-        "mcp-censys"
+        "--from", "git+https://github.com/ryantreb/mcp-censys.git",
+        "python", "main.py"
       ],
       "env": {
-        "CENSYS_API_ID": "${CENSYS_API_ID}",
-        "CENSYS_API_SECRET": "${CENSYS_API_SECRET}"
+        "CENSYS_PAT": "${CENSYS_PAT}"
       }
     },
     "mcp-nvd": {
