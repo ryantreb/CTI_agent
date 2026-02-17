@@ -81,7 +81,7 @@ status: experimental
 description: Detects [specific behavior] associated with [threat]
 references:
     - [Source URL]
-author: Junior Threat Intel Agent
+author: CTI Agent
 date: [YYYY/MM/DD]
 tags:
     - attack.[tactic]
@@ -103,7 +103,7 @@ level: [informational|low|medium|high|critical]
 rule [Threat_Name]_[Variant] {
     meta:
         description = "[Description]"
-        author = "Junior Threat Intel Agent"
+        author = "CTI Agent"
         date = "[YYYY-MM-DD]"
         reference = "[Source]"
         tlp = "[WHITE|GREEN|AMBER|RED]"

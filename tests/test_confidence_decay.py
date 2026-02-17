@@ -1,5 +1,5 @@
 """Tests for confidence decay calculations."""
-import json
+
 from datetime import datetime, timezone, timedelta
 
 import pytest
@@ -40,24 +40,34 @@ class TestCalculateDecay:
     """Decay formula: current = original * max(0.1, 1 - (days / half_life))."""
 
     def test_no_decay_at_zero_days(self):
-        result = calculate_decay(original_confidence=0.85, days_elapsed=0, half_life_days=30)
+        result = calculate_decay(
+            original_confidence=0.85, days_elapsed=0, half_life_days=30
+        )
         assert result == pytest.approx(0.85)
 
     def test_half_decay_at_half_life(self):
-        result = calculate_decay(original_confidence=1.0, days_elapsed=30, half_life_days=30)
+        result = calculate_decay(
+            original_confidence=1.0, days_elapsed=30, half_life_days=30
+        )
         assert result == pytest.approx(0.1)  # max(0.1, 1 - 30/30) = max(0.1, 0) = 0.1
 
     def test_partial_decay(self):
-        result = calculate_decay(original_confidence=0.80, days_elapsed=15, half_life_days=30)
+        result = calculate_decay(
+            original_confidence=0.80, days_elapsed=15, half_life_days=30
+        )
         # factor = max(0.1, 1 - 15/30) = max(0.1, 0.5) = 0.5
         assert result == pytest.approx(0.40)
 
     def test_floor_at_minimum(self):
-        result = calculate_decay(original_confidence=0.90, days_elapsed=500, half_life_days=30)
+        result = calculate_decay(
+            original_confidence=0.90, days_elapsed=500, half_life_days=30
+        )
         assert result == pytest.approx(0.09)  # 0.90 * 0.1 = 0.09
 
     def test_ip_decay_30_days(self):
-        result = calculate_decay(original_confidence=0.85, days_elapsed=15, half_life_days=HALF_LIVES["ip"])
+        result = calculate_decay(
+            original_confidence=0.85, days_elapsed=15, half_life_days=HALF_LIVES["ip"]
+        )
         assert result == pytest.approx(0.425)
 
 

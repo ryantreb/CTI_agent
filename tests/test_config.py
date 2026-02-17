@@ -30,18 +30,31 @@ class TestMcpServerRegistry:
     def test_tier_values_valid(self, registry):
         valid_tiers = {1, 2, 3, 4}
         for server in registry["servers"]:
-            assert server["tier"] in valid_tiers, f"{server['name']} has invalid tier {server['tier']}"
+            assert server["tier"] in valid_tiers, (
+                f"{server['name']} has invalid tier {server['tier']}"
+            )
 
     def test_category_values_valid(self, registry):
-        valid = {"intelligence", "enrichment", "vulnerability", "malware-analysis", "osint", "utility"}
+        valid = {
+            "intelligence",
+            "enrichment",
+            "vulnerability",
+            "malware-analysis",
+            "osint",
+            "utility",
+        }
         for server in registry["servers"]:
             assert server["category"] in valid, f"{server['name']} has invalid category"
 
     def test_no_duplicate_names(self, registry):
         names = [s["name"] for s in registry["servers"]]
-        assert len(names) == len(set(names)), f"Duplicate server names: {[n for n in names if names.count(n) > 1]}"
+        assert len(names) == len(set(names)), (
+            f"Duplicate server names: {[n for n in names if names.count(n) > 1]}"
+        )
 
     def test_api_key_env_var_present_when_required(self, registry):
         for server in registry["servers"]:
             if server["requires_api_key"]:
-                assert "api_key_env_var" in server, f"{server['name']} requires key but no env var specified"
+                assert "api_key_env_var" in server, (
+                    f"{server['name']} requires key but no env var specified"
+                )

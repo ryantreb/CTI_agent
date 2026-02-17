@@ -1,4 +1,4 @@
-# JTIA Agent Definitions
+# CTI Agent Agent Definitions
 
 Agent role definitions for the multi-agent intelligence team (v2.4.0).
 

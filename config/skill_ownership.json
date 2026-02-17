@@ -18,14 +18,14 @@
     },
     "reports": {
       "primary": "generate-report",
-      "description": "JTIA generate-report is the primary report skill",
+      "description": "CTI Agent generate-report is the primary report skill",
       "alternatives": {
         "malware_deep_dive": "external/malware-analysis/malware-report-writer"
       }
     },
     "diamond_model": {
       "primary": "diamond-model-analysis",
-      "description": "JTIA's own Diamond Model analysis. TI Mindmap HUB is source/validator only",
+      "description": "CTI Agent's own Diamond Model analysis. TI Mindmap HUB is source/validator only",
       "external_validators": ["ti-mindmap-hub-mcp"]
     }
   }

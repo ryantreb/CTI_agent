@@ -1,8 +1,8 @@
-# Junior Threat Intel Agent - Quick Start Guide
+# CTI Agent - Quick Start Guide
 
 ## Overview
 
-Junior Threat Intel Agent (JTIA) is a self-evolving threat intelligence system that combines:
+CTI Agent is a self-evolving threat intelligence system that combines:
 - **MCP-native intelligence collection** (Feedly, GTI/VirusTotal)
 - **Professional analytical tradecraft** (Diamond Model, ACH, ATT&CK)
 - **Continuous self-improvement** (quantitative graders, meta-prompt optimization)
@@ -152,4 +152,4 @@ All assessments use ICD 203 probability language:
 
 ---
 
-*Junior Threat Intel Agent v1.0.0*
+*CTI Agent v1.0.0*

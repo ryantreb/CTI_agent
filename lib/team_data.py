@@ -1,4 +1,4 @@
-"""Inter-agent data schemas for JTIA multi-agent team.
+"""Inter-agent data schemas for CTI Agent multi-agent team.
 
 Defines typed data structures for handoffs between agents:
 Collector → Analyst → Devil's Advocate → Verifier → Reporter.
@@ -185,7 +185,9 @@ def create_verification_report(
         "verified_claims": verified_claims,
         "refuted_claims": refuted_claims,
         "unverified_claims": unverified_claims,
-        "total_claims": len(verified_claims) + len(refuted_claims) + len(unverified_claims),
+        "total_claims": len(verified_claims)
+        + len(refuted_claims)
+        + len(unverified_claims),
         "verified_count": len(verified_claims),
         "refuted_count": len(refuted_claims),
         "unverified_count": len(unverified_claims),

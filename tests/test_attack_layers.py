@@ -106,7 +106,7 @@ class TestDiamondToLayer:
             },
         }
         layer = diamond_to_layer(diamond, report_guid="test-guid")
-        assert layer["name"] == "APT29 - JTIA Analysis"
+        assert layer["name"] == "APT29 - CTI Agent Analysis"
         assert len(layer["techniques"]) == 2
 
     def test_diamond_minimal(self):

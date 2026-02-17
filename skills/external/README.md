@@ -1,6 +1,6 @@
 # External Skills
 
-Third-party skills integrated into JTIA. Each subdirectory contains skills
+Third-party skills integrated into CTI Agent. Each subdirectory contains skills
 from an external source, installed per the project's skill conflict resolution
 policy (see AGENT.md).
 
@@ -16,4 +16,4 @@ policy (see AGENT.md).
 
 - **YARA rules**: YARAHQ skill is primary author
 - **Sigma rules**: gl0bal01's detection-engineer is primary author
-- **Reports**: JTIA's generate-report orchestrates, delegates detection rules
+- **Reports**: CTI Agent's generate-report orchestrates, delegates detection rules

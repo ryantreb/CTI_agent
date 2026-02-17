@@ -8,8 +8,8 @@ from . import framework_compliance_grader
 from . import analytical_quality_grader
 
 __all__ = [
-    'ttp_coverage_grader',
-    'ioc_fidelity_grader',
-    'framework_compliance_grader',
-    'analytical_quality_grader'
+    "ttp_coverage_grader",
+    "ioc_fidelity_grader",
+    "framework_compliance_grader",
+    "analytical_quality_grader",
 ]

@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "description": "JTIA MCP Server Registry - single source of truth for all server configurations",
+  "description": "CTI Agent MCP Server Registry - single source of truth for all server configurations",
   "servers": [
     {
       "name": "feedly",

@@ -108,7 +108,10 @@ def merge_with_multitool(sarif_dir: Path) -> dict | None:
         ]
         result = subprocess.run(cmd, capture_output=True, timeout=120)
         if result.returncode != 0:
-            print(f"SARIF Multitool merge failed: {result.stderr.decode()}", file=sys.stderr)
+            print(
+                f"SARIF Multitool merge failed: {result.stderr.decode()}",
+                file=sys.stderr,
+            )
             return None
 
         return json.loads(tmp_path.read_text())
@@ -161,7 +164,9 @@ def merge_sarif_pure_python(sarif_dir: Path) -> dict:
     return merged
 
 
-def filter_sarif_by_triage(sarif: dict, true_positives: set[tuple[str, str, int]]) -> dict:
+def filter_sarif_by_triage(
+    sarif: dict, true_positives: set[tuple[str, str, int]]
+) -> dict:
     """Filter SARIF results to include only triaged true positives."""
     normalized_tps: set[tuple[str, str, int]] = set()
     for rule, file_path, line in true_positives:
@@ -169,7 +174,9 @@ def filter_sarif_by_triage(sarif: dict, true_positives: set[tuple[str, str, int]
 
     filtered = {
         "version": sarif.get("version", "2.1.0"),
-        "$schema": sarif.get("$schema", "https://json.schemastore.org/sarif-2.1.0.json"),
+        "$schema": sarif.get(
+            "$schema", "https://json.schemastore.org/sarif-2.1.0.json"
+        ),
         "runs": [],
     }
 
@@ -189,7 +196,9 @@ def filter_sarif_by_triage(sarif: dict, true_positives: set[tuple[str, str, int]
         if filtered_results:
             result_rule_ids = {r.get("ruleId") for r in filtered_results}
             driver = run.get("tool", {}).get("driver", {})
-            filtered_rules = [r for r in driver.get("rules", []) if r.get("id") in result_rule_ids]
+            filtered_rules = [
+                r for r in driver.get("rules", []) if r.get("id") in result_rule_ids
+            ]
 
             filtered_run = {
                 "tool": {

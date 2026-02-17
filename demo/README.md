@@ -1,6 +1,6 @@
-# JTIA Demo Mode
+# CTI Agent Demo Mode
 
-Run the full JTIA pipeline with synthetic data and mock MCP responses.
+Run the full CTI Agent pipeline with synthetic data and mock MCP responses.
 No API keys required.
 
 ## Quick Start

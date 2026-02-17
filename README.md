@@ -1,7 +1,7 @@
-# Junior Threat Intel Agent (JTIA)
+# CTI Agent
 
 **Version**: 1.0.0  
-**Codename**: JTIA  
+**Codename**: CTI
 
 A self-evolving autonomous threat intelligence agent with professional analytical tradecraft.
 
@@ -9,7 +9,7 @@ A self-evolving autonomous threat intelligence agent with professional analytica
 
 ## Overview
 
-Junior Threat Intel Agent is an autonomous system that:
+CTI Agent is an autonomous system that:
 
 1. **Collects** threat intelligence from MCP servers (Feedly, GTI/VirusTotal)
 2. **Enriches** IOCs with multi-source data
@@ -319,5 +319,5 @@ MIT License - See LICENSE file.
 
 ---
 
-*Junior Threat Intel Agent v1.0.0*  
+*CTI Agent v1.0.0*  
 *Self-evolving threat intelligence with professional analytical tradecraft*

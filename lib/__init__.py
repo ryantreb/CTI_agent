@@ -1,1 +1,1 @@
-"""JTIA shared library utilities."""
+"""CTI Agent shared library utilities."""

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-JTIA Structured Logging Schema
+CTI Agent Structured Logging Schema
 
 Provides unified log entry creation and error classification
 across all skills and MCP server interactions.
@@ -8,7 +8,16 @@ across all skills and MCP server interactions.
 
 from datetime import datetime, timezone
 
-VALID_EVENT_TYPES = {"mcp_call", "enrichment", "analysis", "error", "metric", "skill_start", "skill_end", "health_check"}
+VALID_EVENT_TYPES = {
+    "mcp_call",
+    "enrichment",
+    "analysis",
+    "error",
+    "metric",
+    "skill_start",
+    "skill_end",
+    "health_check",
+}
 VALID_SEVERITIES = {"info", "warn", "error", "critical"}
 
 
@@ -19,11 +28,15 @@ def create_log_entry(
     severity: str,
     data: dict,
 ) -> dict:
-    """Create a structured log entry conforming to JTIA schema."""
+    """Create a structured log entry conforming to CTI Agent schema."""
     if event_type not in VALID_EVENT_TYPES:
-        raise ValueError(f"Invalid event_type '{event_type}'. Must be one of: {VALID_EVENT_TYPES}")
+        raise ValueError(
+            f"Invalid event_type '{event_type}'. Must be one of: {VALID_EVENT_TYPES}"
+        )
     if severity not in VALID_SEVERITIES:
-        raise ValueError(f"Invalid severity '{severity}'. Must be one of: {VALID_SEVERITIES}")
+        raise ValueError(
+            f"Invalid severity '{severity}'. Must be one of: {VALID_SEVERITIES}"
+        )
 
     return {
         "timestamp": datetime.now(timezone.utc).isoformat(),

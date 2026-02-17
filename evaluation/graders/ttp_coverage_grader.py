@@ -9,7 +9,7 @@ import re
 from typing import Tuple
 
 # MITRE ATT&CK technique pattern: T#### or T####.###
-TTP_PATTERN = re.compile(r'T\d{4}(?:\.\d{3})?')
+TTP_PATTERN = re.compile(r"T\d{4}(?:\.\d{3})?")
 
 
 def extract_ttps(text: str) -> set:
@@ -20,17 +20,17 @@ def extract_ttps(text: str) -> set:
 def grade(source: str, output: str) -> Tuple[float, dict]:
     """
     Grade TTP coverage.
-    
+
     Args:
         source: Original intelligence source text
         output: Generated report/analysis output
-        
+
     Returns:
         Tuple of (score, details_dict)
     """
     source_ttps = extract_ttps(source)
     output_ttps = extract_ttps(output)
-    
+
     # If no TTPs in source, nothing to cover
     if not source_ttps:
         return 1.0, {
@@ -38,22 +38,24 @@ def grade(source: str, output: str) -> Tuple[float, dict]:
             "output_ttps": list(output_ttps),
             "covered": [],
             "missing": [],
-            "note": "No TTPs in source to cover"
+            "note": "No TTPs in source to cover",
         }
-    
+
     covered = source_ttps & output_ttps
     missing = source_ttps - output_ttps
-    extra = output_ttps - source_ttps  # TTPs in output but not source (may be valid enrichment)
-    
+    extra = (
+        output_ttps - source_ttps
+    )  # TTPs in output but not source (may be valid enrichment)
+
     coverage_score = len(covered) / len(source_ttps)
-    
+
     return coverage_score, {
         "source_ttps": sorted(list(source_ttps)),
         "output_ttps": sorted(list(output_ttps)),
         "covered": sorted(list(covered)),
         "missing": sorted(list(missing)),
         "extra": sorted(list(extra)),
-        "coverage_ratio": f"{len(covered)}/{len(source_ttps)}"
+        "coverage_ratio": f"{len(covered)}/{len(source_ttps)}",
     }
 
 
@@ -69,7 +71,7 @@ if __name__ == "__main__":
     followed by T1059.001 (PowerShell) for execution. Persistence was achieved via
     T1547.001 (Registry Run Keys). C2 communications used T1071.001 (Web Protocols).
     """
-    
+
     test_output = """
     ## ATT&CK Mapping
     | Technique | Description |
@@ -78,7 +80,7 @@ if __name__ == "__main__":
     | T1059.001 | PowerShell Execution |
     | T1547.001 | Registry Run Keys |
     """
-    
+
     score, details = grade(test_source, test_output)
     print(f"Score: {score:.2f}")
     print(f"Passed: {passes(score)}")

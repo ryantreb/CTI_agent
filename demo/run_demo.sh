@@ -4,11 +4,11 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
-echo "=== JTIA Demo Mode ==="
+echo "=== CTI Agent Demo Mode ==="
 echo "Using mock MCP responses (no API keys required)"
 echo ""
 
-export JTIA_DEMO_MODE=true
+export CTI_AGENT_DEMO_MODE=true
 
 # Step 1: Generate STIX bundle from demo Diamond Model
 echo "[1/3] Generating STIX 2.1 bundle from demo Diamond Model..."

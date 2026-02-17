@@ -1,4 +1,4 @@
-"""Devil's Advocate debate engine for JTIA multi-agent team.
+"""Devil's Advocate debate engine for CTI Agent multi-agent team.
 
 Implements structured adversarial debate per ICD 203 Alternative Analysis
 requirements. The Devil's Advocate MUST challenge any assessment rated

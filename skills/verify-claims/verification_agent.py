@@ -6,16 +6,16 @@ This module provides autonomous verification of IOCs, TTPs, and attribution clai
 against authoritative source APIs. Designed for integration with MCP-based agent
 architectures.
 
-Author: Junior Threat Intel Agent
+Author: CTI Agent
 Version: 1.0.0
 
 Usage:
     # Activate your virtual environment first
     aidev  # or: source ~/ai-dev/bin/activate
-    
+
     # Install dependencies
     pip install httpx pydantic tenacity python-dotenv
-    
+
     # Run standalone test
     python verification_agent.py
 """
@@ -83,8 +83,10 @@ CACHE_TTL = 3600
 # ENUMS & DATA MODELS
 # -----------------------------------------------------------------------------
 
+
 class VerificationStatus(str, Enum):
     """Verification confidence levels."""
+
     VERIFIED_HIGH = "VERIFIED_HIGH"
     VERIFIED_MEDIUM = "VERIFIED_MEDIUM"
     VERIFIED_LOW = "VERIFIED_LOW"
@@ -94,6 +96,7 @@ class VerificationStatus(str, Enum):
 
 class MatchType(str, Enum):
     """Attribute comparison result types."""
+
     EXACT = "EXACT"
     PARTIAL = "PARTIAL"
     MISMATCH = "MISMATCH"
@@ -102,6 +105,7 @@ class MatchType(str, Enum):
 
 class ClaimType(str, Enum):
     """Classification of intelligence claim types."""
+
     IOC = "IOC"
     TTP = "TTP"
     ATTRIBUTION = "ATTRIBUTION"
@@ -111,6 +115,7 @@ class ClaimType(str, Enum):
 
 class SourcePlatform(str, Enum):
     """Supported source platforms for verification."""
+
     VIRUSTOTAL = "virustotal"
     SHODAN = "shodan"
     OTX = "otx"
@@ -123,6 +128,7 @@ class SourcePlatform(str, Enum):
 @dataclass
 class AttributeCheck:
     """Result of a single attribute comparison."""
+
     attribute_name: str
     extracted_value: Any
     actual_value: Any
@@ -141,6 +147,7 @@ class AttributeCheck:
 @dataclass
 class VerificationResult:
     """Complete verification result for a single claim."""
+
     claim_id: str
     original_claim: str
     claim_type: ClaimType
@@ -182,6 +189,7 @@ class VerificationResult:
 
 class Claim(BaseModel):
     """Input model for a claim to be verified."""
+
     claim_id: str = Field(default_factory=lambda: str(uuid4()))
     statement: str = Field(..., description="The verbatim claim from upstream agent")
     claim_type: ClaimType = Field(..., description="Classification of claim")
@@ -196,6 +204,7 @@ class Claim(BaseModel):
 # -----------------------------------------------------------------------------
 # VERIFICATION CACHE
 # -----------------------------------------------------------------------------
+
 
 class VerificationCache:
     """
@@ -244,8 +253,10 @@ _cache = VerificationCache()
 # API CLIENT WITH RETRY LOGIC
 # -----------------------------------------------------------------------------
 
+
 class APIClientError(Exception):
     """Custom exception for API client errors."""
+
     def __init__(self, message: str, status_code: int = 0, retryable: bool = False):
         super().__init__(message)
         self.status_code = status_code
@@ -329,6 +340,7 @@ async def make_api_request(
 # SOURCE-SPECIFIC VERIFICATION HANDLERS
 # -----------------------------------------------------------------------------
 
+
 async def verify_virustotal_hash(
     client: httpx.AsyncClient,
     identifier: str,
@@ -376,7 +388,9 @@ async def verify_virustotal_hash(
             actual_first = attrs.get("first_submission_date")
             if actual_first:
                 # Convert epoch to ISO date string
-                actual_date = datetime.utcfromtimestamp(actual_first).strftime("%Y-%m-%d")
+                actual_date = datetime.utcfromtimestamp(actual_first).strftime(
+                    "%Y-%m-%d"
+                )
                 attribute_checks.append(
                     AttributeCheck(
                         attribute_name="first_seen",
@@ -780,7 +794,9 @@ async def verify_urlhaus(
                     attribute_name="threat",
                     extracted_value=extracted_attrs["threat"],
                     actual_value=actual_threat,
-                    match_type=_compare_strings(extracted_attrs["threat"], actual_threat),
+                    match_type=_compare_strings(
+                        extracted_attrs["threat"], actual_threat
+                    ),
                 )
             )
 
@@ -794,7 +810,8 @@ async def verify_urlhaus(
                     actual_value=actual_status,
                     match_type=(
                         MatchType.EXACT
-                        if extracted_attrs["url_status"].lower() == actual_status.lower()
+                        if extracted_attrs["url_status"].lower()
+                        == actual_status.lower()
                         else MatchType.MISMATCH
                     ),
                 )
@@ -909,6 +926,7 @@ async def verify_misp_event(
 # COMPARISON UTILITIES
 # -----------------------------------------------------------------------------
 
+
 def _compare_numeric(
     extracted: Any,
     actual: Any,
@@ -986,6 +1004,7 @@ def _compare_dates(
 # CONFIDENCE SCORING
 # -----------------------------------------------------------------------------
 
+
 def calculate_verification_status(
     attribute_checks: list[AttributeCheck],
     http_status: int,
@@ -1037,6 +1056,7 @@ def calculate_verification_status(
 # -----------------------------------------------------------------------------
 # MAIN VERIFICATION DISPATCHER
 # -----------------------------------------------------------------------------
+
 
 def _detect_identifier_type(identifier: str) -> str:
     """Detect the type of identifier (hash, IP, domain, etc.)."""
@@ -1107,33 +1127,37 @@ async def verify_claim(claim: Claim) -> VerificationResult:
             # Route to appropriate handler based on source platform
             if claim.source_platform == SourcePlatform.VIRUSTOTAL:
                 if identifier_type in ("sha256", "sha1", "md5"):
-                    status_code, attribute_checks, raw_response = (
-                        await verify_virustotal_hash(
-                            client,
-                            claim.object_identifier,
-                            claim.extracted_attributes,
-                        )
+                    (
+                        status_code,
+                        attribute_checks,
+                        raw_response,
+                    ) = await verify_virustotal_hash(
+                        client,
+                        claim.object_identifier,
+                        claim.extracted_attributes,
                     )
                 elif identifier_type in ("ipv4", "ipv6"):
-                    status_code, attribute_checks, raw_response = (
-                        await verify_virustotal_ip(
-                            client,
-                            claim.object_identifier,
-                            claim.extracted_attributes,
-                        )
+                    (
+                        status_code,
+                        attribute_checks,
+                        raw_response,
+                    ) = await verify_virustotal_ip(
+                        client,
+                        claim.object_identifier,
+                        claim.extracted_attributes,
                     )
                 elif identifier_type == "domain":
-                    status_code, attribute_checks, raw_response = (
-                        await verify_virustotal_domain(
-                            client,
-                            claim.object_identifier,
-                            claim.extracted_attributes,
-                        )
+                    (
+                        status_code,
+                        attribute_checks,
+                        raw_response,
+                    ) = await verify_virustotal_domain(
+                        client,
+                        claim.object_identifier,
+                        claim.extracted_attributes,
                     )
                 else:
-                    logger.warning(
-                        f"Unsupported VT identifier type: {identifier_type}"
-                    )
+                    logger.warning(f"Unsupported VT identifier type: {identifier_type}")
                     status_code = 400
 
             elif claim.source_platform == SourcePlatform.SHODAN:
@@ -1287,6 +1311,7 @@ async def verify_claims_batch(claims: list[Claim]) -> list[VerificationResult]:
 # PARENT AGENT HANDOFF INTERFACE
 # -----------------------------------------------------------------------------
 
+
 def apply_confidence_weights(
     results: list[VerificationResult],
 ) -> list[dict[str, Any]]:
@@ -1380,6 +1405,7 @@ def generate_verification_report(results: list[VerificationResult]) -> str:
 # -----------------------------------------------------------------------------
 # CLI INTERFACE FOR STANDALONE TESTING
 # -----------------------------------------------------------------------------
+
 
 async def main():
     """CLI entry point for testing verification agent."""

@@ -1,4 +1,4 @@
-# JTIA v2.4.0 Phase 4: Multi-Agent Teams Implementation Plan
+# CTI Agent v2.4.0 Phase 4: Multi-Agent Teams Implementation Plan
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
@@ -91,7 +91,7 @@ Expected: FAIL — `ModuleNotFoundError: No module named 'lib.team_data'`
 **Step 3: Write minimal implementation**
 
 ```python
-"""Inter-agent data schemas for JTIA multi-agent team.
+"""Inter-agent data schemas for CTI Agent multi-agent team.
 
 Defines typed data structures for handoffs between agents:
 Collector → Analyst → Devil's Advocate → Verifier → Reporter.
@@ -697,7 +697,7 @@ Expected: FAIL — `ModuleNotFoundError`
 **Step 3: Write minimal implementation**
 
 ```python
-"""Devil's Advocate debate engine for JTIA multi-agent team.
+"""Devil's Advocate debate engine for CTI Agent multi-agent team.
 
 Implements structured adversarial debate per ICD 203 Alternative Analysis
 requirements. The Devil's Advocate MUST challenge any assessment rated
@@ -994,7 +994,7 @@ Expected: FAIL — `ModuleNotFoundError`
 **Step 3: Write minimal implementation**
 
 ```python
-"""Verification pipeline for JTIA multi-agent team.
+"""Verification pipeline for CTI Agent multi-agent team.
 
 Extracts verifiable claims from assessment packages, routes them to
 appropriate verification strategies, and detects hallucination patterns.
@@ -1182,7 +1182,7 @@ git commit -m "feat: add verification pipeline with hallucination detection"
 Create `agents/README.md`:
 
 ```markdown
-# JTIA Agent Definitions
+# CTI Agent Agent Definitions
 
 Agent role definitions for the multi-agent intelligence team (v2.4.0).
 
@@ -1887,7 +1887,7 @@ git commit -m "feat: add team orchestration skill for 5-agent pipeline"
 ```json
 {
   "schema_version": "1.0",
-  "team_name": "jtia-intelligence-team",
+  "team_name": "cti-intelligence-team",
   "version": "2.4.0",
   "agents": [
     {
@@ -2018,7 +2018,7 @@ Collector → Analyst → [Devil's Advocate ↔ Analyst debate] → Verifier →
 5. Hallucination patterns detected and flagged
 ```
 
-4. Update footer: `*Junior Threat Intel Agent v2.4.0 — ...*`
+4. Update footer: `*CTI Agent v2.4.0 — ...*`
 
 **Step 2: Commit**
 

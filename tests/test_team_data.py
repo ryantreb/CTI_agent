@@ -1,6 +1,5 @@
 """Tests for inter-agent data schemas."""
 
-import pytest
 from lib.team_data import (
     create_assessment_package,
     create_challenge,
@@ -155,7 +154,11 @@ class TestDebateRecord:
             rounds_completed=2,
             consensus_reached=True,
             analyst_responses=[
-                {"challenge_id": 0, "response": "Accepted", "adjustment": "Reduced to 'roughly even chance'"}
+                {
+                    "challenge_id": 0,
+                    "response": "Accepted",
+                    "adjustment": "Reduced to 'roughly even chance'",
+                }
             ],
             final_judgments=[
                 {"judgment_id": "KJ1", "revised_confidence": "roughly even chance"}

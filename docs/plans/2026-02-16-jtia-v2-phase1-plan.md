@@ -1,8 +1,8 @@
-# JTIA v2.0 Phase 1 Implementation Plan
+# CTI Agent v2.0 Phase 1 Implementation Plan
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
-**Goal:** Expand JTIA from 3 to 23 MCP servers with dynamic routing, graceful degradation, structured logging, and two new skills (check-server-health, plan-session).
+**Goal:** Expand CTI Agent from 3 to 23 MCP servers with dynamic routing, graceful degradation, structured logging, and two new skills (check-server-health, plan-session).
 
 **Architecture:** Incremental layering on existing SKILL.md prompt-orchestration. New MCP servers added to `config/mcp_config.json`. Routing logic added to `enrich-iocs` SKILL.md. New skills follow existing SKILL.md conventions. Python utilities in `lib/` for shared logic (health checks, logging schema, config validation).
 
@@ -82,7 +82,7 @@ class TestMcpServerRegistry:
 
 Create `lib/__init__.py`:
 ```python
-"""JTIA shared library utilities."""
+"""CTI Agent shared library utilities."""
 ```
 
 **Step 3: Run tests to verify they fail**
@@ -97,7 +97,7 @@ Create `config/mcp_server_registry.json`:
 ```json
 {
   "schema_version": "2.0",
-  "description": "JTIA MCP Server Registry - single source of truth for all server configurations",
+  "description": "CTI Agent MCP Server Registry - single source of truth for all server configurations",
   "servers": [
     {
       "name": "feedly",
@@ -454,7 +454,7 @@ Replace `config/.env.template` contents:
 
 ```bash
 # ============================================
-# JTIA v2.0 API Key Configuration
+# CTI Agent v2.0 API Key Configuration
 # ============================================
 # Copy this file to config/.env and fill in your keys.
 # Keys marked REQUIRED are needed for core functionality.
@@ -574,7 +574,7 @@ Create `lib/config.py`:
 ```python
 #!/usr/bin/env python3
 """
-JTIA Configuration Loader
+CTI Agent Configuration Loader
 
 Loads MCP server registry, provides routing tables,
 and generates Claude Code mcp_config.json from the registry.
@@ -759,7 +759,7 @@ Create `lib/logging_schema.py`:
 ```python
 #!/usr/bin/env python3
 """
-JTIA Structured Logging Schema
+CTI Agent Structured Logging Schema
 
 Provides unified log entry creation and error classification
 across all skills and MCP server interactions.
@@ -778,7 +778,7 @@ def create_log_entry(
     severity: str,
     data: dict,
 ) -> dict:
-    """Create a structured log entry conforming to JTIA schema."""
+    """Create a structured log entry conforming to CTI Agent schema."""
     if event_type not in VALID_EVENT_TYPES:
         raise ValueError(f"Invalid event_type '{event_type}'. Must be one of: {VALID_EVENT_TYPES}")
     if severity not in VALID_SEVERITIES:
@@ -915,7 +915,7 @@ Create `lib/health_check.py`:
 ```python
 #!/usr/bin/env python3
 """
-JTIA Server Health Check Utility
+CTI Agent Server Health Check Utility
 
 Checks API key availability, server connectivity,
 and reports degraded capabilities.
@@ -1525,7 +1525,7 @@ git commit -m "feat: add script to generate mcp_config.json from server registry
 Create `.github/workflows/test.yml`:
 
 ```yaml
-name: JTIA Tests
+name: CTI Agent Tests
 
 on:
   push:
@@ -1587,11 +1587,11 @@ git commit -m "ci: add GitHub Actions test pipeline with JSON validation"
 **Step 1: Create CLAUDE.md**
 
 ```markdown
-# JTIA Development Instructions
+# CTI Agent Development Instructions
 
 ## What This Project Is
 
-JTIA (Junior Threat Intel Agent) is an autonomous threat intelligence agent powered by Claude. It uses SKILL.md files as prompt instructions, MCP servers as data sources, and a self-evolving evaluation loop for quality improvement.
+CTI Agent is an autonomous threat intelligence agent powered by Claude. It uses SKILL.md files as prompt instructions, MCP servers as data sources, and a self-evolving evaluation loop for quality improvement.
 
 **Key distinction**: AGENT.md is the runtime brain (instructions Claude follows when *running* the agent). CLAUDE.md (this file) tells Claude Code how to *develop* the project.
 
@@ -1740,7 +1740,7 @@ Expected: All tests PASS
 **Step 2: Tag the release**
 
 ```bash
-git tag -a v2.1.0 -m "JTIA v2.1.0 - Phase 1: MCP Server Expansion
+git tag -a v2.1.0 -m "CTI Agent v2.1.0 - Phase 1: MCP Server Expansion
 
 - 23 MCP servers (20 new, all open-source)
 - Dynamic IOC routing with fallback chains

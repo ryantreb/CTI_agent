@@ -1,7 +1,4 @@
 """Tests for threat actor profile management."""
-import json
-from pathlib import Path
-from datetime import datetime, timezone
 
 import pytest
 
@@ -75,7 +72,13 @@ class TestUpdateActorProfile:
         updated = update_actor_profile(
             "APT29",
             actors_dir,
-            add_ttps=[{"technique": "T1566.001", "confidence": "high", "first_observed": "2026-02-16"}],
+            add_ttps=[
+                {
+                    "technique": "T1566.001",
+                    "confidence": "high",
+                    "first_observed": "2026-02-16",
+                }
+            ],
         )
         assert len(updated["known_ttps"]) == 1
         assert updated["known_ttps"][0]["technique"] == "T1566.001"
@@ -87,7 +90,9 @@ class TestUpdateActorProfile:
         updated = update_actor_profile(
             "APT29",
             actors_dir,
-            add_infrastructure=[{"type": "domain", "value": "evil.com", "status": "active"}],
+            add_infrastructure=[
+                {"type": "domain", "value": "evil.com", "status": "active"}
+            ],
         )
         assert len(updated["known_infrastructure"]) == 1
 

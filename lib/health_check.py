@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-JTIA Server Health Check Utility
+CTI Agent Server Health Check Utility
 
 Checks API key availability, server connectivity,
 and reports degraded capabilities.
@@ -77,7 +77,9 @@ def run_health_check() -> dict:
     keyed_servers = get_servers_requiring_keys()
 
     # Check which API keys are present
-    all_key_vars = list({s["api_key_env_var"] for s in keyed_servers if "api_key_env_var" in s})
+    all_key_vars = list(
+        {s["api_key_env_var"] for s in keyed_servers if "api_key_env_var" in s}
+    )
     present_keys, missing_keys = check_env_keys(all_key_vars)
 
     # Determine availability based on key presence
@@ -87,7 +89,9 @@ def run_health_check() -> dict:
     for server in registry["servers"]:
         if not server["requires_api_key"]:
             available.append(server["name"])
-        elif server.get("api_key_env_var") and os.environ.get(server["api_key_env_var"]):
+        elif server.get("api_key_env_var") and os.environ.get(
+            server["api_key_env_var"]
+        ):
             available.append(server["name"])
         else:
             unavailable.append(server["name"])

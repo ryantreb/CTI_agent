@@ -1,4 +1,4 @@
-"""Integration tests for JTIA v2.4.0 Phase 1+2+3+4.
+"""Integration tests for CTI Agent v2.4.0 Phase 1+2+3+4.
 
 Validates cross-cutting concerns: routing consistency, config sync,
 health check behavior, skill coverage, version tracking, STIX output,

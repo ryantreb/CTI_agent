@@ -3,7 +3,6 @@
 Tests record schema construction and query formatting.
 Actual Pinecone calls are mocked — live integration tested via demo mode.
 """
-import pytest
 
 from lib.pinecone_memory import (
     PINECONE_INDEX,

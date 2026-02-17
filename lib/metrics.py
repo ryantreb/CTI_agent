@@ -1,4 +1,4 @@
-"""Metrics collection for JTIA observability.
+"""Metrics collection for CTI Agent observability.
 
 Appends structured metrics to state/metrics.jsonl for trend analysis.
 Metrics include IOC enrichment counts, confidence scores, MCP response

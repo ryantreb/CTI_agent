@@ -1,8 +1,8 @@
-# JTIA Development Instructions
+# CTI Agent Development Instructions
 
 ## What This Project Is
 
-JTIA (Junior Threat Intel Agent) is an autonomous threat intelligence agent powered by Claude. It uses SKILL.md files as prompt instructions, MCP servers as data sources, and a self-evolving evaluation loop for quality improvement.
+CTI Agent is an autonomous threat intelligence agent powered by Claude. It uses SKILL.md files as prompt instructions, MCP servers as data sources, and a self-evolving evaluation loop for quality improvement.
 
 **Key distinction**: AGENT.md is the runtime brain (instructions Claude follows when *running* the agent). CLAUDE.md (this file) tells Claude Code how to *develop* the project.
 

@@ -1,12 +1,12 @@
-# JTIA v2.3.0 Phase 3 Implementation Plan
+# CTI Agent v2.3.0 Phase 3 Implementation Plan
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
 **Goal:** Add persistent intelligence memory via Pinecone vector search, threat actor profiles that accumulate across sessions, confidence decay with automatic re-evaluation triggers, and metrics collection.
 
-**Architecture:** Phase 3 adds a semantic memory layer (Pinecone) so JTIA can recall relevant historical intelligence during analysis. Threat actor profiles persist in `actors/` as JSON files and are also upserted to Pinecone for cross-session search. A confidence decay engine tracks IOC/assessment freshness using configurable half-lives, triggering re-enrichment when confidence drops below threshold. Metrics collection extends the existing logging schema.
+**Architecture:** Phase 3 adds a semantic memory layer (Pinecone) so CTI Agent can recall relevant historical intelligence during analysis. Threat actor profiles persist in `actors/` as JSON files and are also upserted to Pinecone for cross-session search. A confidence decay engine tracks IOC/assessment freshness using configurable half-lives, triggering re-enrichment when confidence drops below threshold. Metrics collection extends the existing logging schema.
 
-**Tech Stack:** Python 3.12+, pytest, Pinecone MCP server (existing), JTIA SKILL.md prompt orchestration, JSON state files
+**Tech Stack:** Python 3.12+, pytest, Pinecone MCP server (existing), CTI Agent SKILL.md prompt orchestration, JSON state files
 
 ---
 
@@ -795,7 +795,7 @@ git commit -m "test: add metrics collection tests (red phase)"
 **Step 1: Implement metrics collection**
 
 ```python
-"""Metrics collection for JTIA observability.
+"""Metrics collection for CTI Agent observability.
 
 Appends structured metrics to state/metrics.jsonl for trend analysis.
 Metrics include IOC enrichment counts, confidence scores, MCP response
@@ -1011,7 +1011,7 @@ git commit -m "test: add Pinecone memory integration tests (red phase)"
 **Step 1: Implement Pinecone memory helpers**
 
 ```python
-"""Pinecone vector memory integration for JTIA.
+"""Pinecone vector memory integration for CTI Agent.
 
 Provides record construction and query formatting for the Pinecone MCP server.
 Actual Pinecone operations are performed via MCP tool calls in SKILL.md skills.
@@ -1033,7 +1033,7 @@ def build_intel_record(
     confidence: float = 0.0,
     campaign: str = "",
 ) -> dict:
-    """Build a Pinecone record from a JTIA intelligence report."""
+    """Build a Pinecone record from a CTI Agent intelligence report."""
     return {
         "_id": f"report-{report_guid}",
         "text": summary,
@@ -1405,7 +1405,7 @@ Expected: Clean
 **Step 3: Tag release**
 
 ```bash
-git tag -a v2.3.0 -m "JTIA v2.3.0: Pinecone memory, actor profiles, confidence decay, metrics"
+git tag -a v2.3.0 -m "CTI Agent v2.3.0: Pinecone memory, actor profiles, confidence decay, metrics"
 ```
 
 **Step 4: Verify tag**

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-JTIA Configuration Loader
+CTI Agent Configuration Loader
 
 Loads MCP server registry, provides routing tables,
 and generates Claude Code mcp_config.json from the registry.

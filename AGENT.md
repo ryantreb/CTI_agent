@@ -1,7 +1,7 @@
-# Junior Threat Intel Agent
+# CTI Agent
 
 **Version**: 2.4.0
-**Codename**: JTIA  
+**Codename**: CTI
 **Purpose**: Autonomous threat intelligence collection, analysis, and reporting with professional analytical tradecraft and continuous self-improvement.
 
 ---
@@ -99,7 +99,7 @@ monitor-feeds → enrich-iocs → **verify-claims** → diamond-model → genera
 | YARAHQ/yara-rule-skill | yara-rule-skill | YARA detection rule authoring (primary) |
 | trailofbits/skills | variant-analysis, semgrep-rule-creator, static-analysis, differential-review, insecure-defaults, dwarf-expert | Security analysis and detection engineering |
 
-**Skill Conflict Resolution**: See `config/skill_ownership.json`. YARA → YARAHQ, Sigma → gl0bal01, Reports → JTIA's generate-report.
+**Skill Conflict Resolution**: See `config/skill_ownership.json`. YARA → YARAHQ, Sigma → gl0bal01, Reports → CTI Agent's generate-report.
 
 ### Verification Agent
 
@@ -365,4 +365,4 @@ Before executing any skills:
 
 ---
 
-*Junior Threat Intel Agent v2.4.0 — Multi-agent intelligence team with adversarial review and independent verification.*
+*CTI Agent v2.4.0 — Multi-agent intelligence team with adversarial review and independent verification.*

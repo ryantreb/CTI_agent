@@ -1,4 +1,4 @@
-"""Pinecone vector memory integration for JTIA.
+"""Pinecone vector memory integration for CTI Agent.
 
 Provides record construction and query formatting for the Pinecone MCP server.
 Actual Pinecone operations are performed via MCP tool calls in SKILL.md skills.
@@ -21,7 +21,7 @@ def build_intel_record(
     confidence: float = 0.0,
     campaign: str = "",
 ) -> dict:
-    """Build a Pinecone record from a JTIA intelligence report."""
+    """Build a Pinecone record from a CTI Agent intelligence report."""
     return {
         "_id": f"report-{report_guid}",
         "text": summary,

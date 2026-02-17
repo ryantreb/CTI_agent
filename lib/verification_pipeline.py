@@ -1,4 +1,4 @@
-"""Verification pipeline for JTIA multi-agent team.
+"""Verification pipeline for CTI Agent multi-agent team.
 
 Extracts verifiable claims from assessment packages, routes them to
 appropriate verification strategies, and detects hallucination patterns.
