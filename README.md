@@ -1,39 +1,36 @@
 # CTI Agent
 
-**Version**: 1.0.0  
-**Codename**: CTI
+**Version**: 2.4.0
 
-A self-evolving autonomous threat intelligence agent with professional analytical tradecraft.
+Autonomous multi-agent cyber threat intelligence system with professional analytical tradecraft, 23 MCP server integrations, and built-in anti-hallucination verification.
 
 ---
 
 ## Overview
 
-CTI Agent is an autonomous system that:
+CTI Agent is a prompt-orchestrated, multi-agent threat intelligence system that:
 
-1. **Collects** threat intelligence from MCP servers (Feedly, GTI/VirusTotal)
-2. **Enriches** IOCs with multi-source data
+1. **Collects** threat intelligence from 23 MCP servers across 6 categories
+2. **Enriches** IOCs with multi-source data and dynamic routing
 3. **Analyzes** threats using Diamond Model and ACH frameworks
-4. **Produces** professional intelligence reports with calibrated confidence
-5. **Improves** itself through quantitative evaluation and prompt optimization
+4. **Challenges** assessments through adversarial Devil's Advocate debate
+5. **Verifies** every claim independently before reporting (anti-hallucination)
+6. **Produces** calibrated intelligence reports, STIX 2.1 bundles, and ATT&CK layers
+7. **Improves** itself through quantitative evaluation and prompt optimization
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                      JUNIOR THREAT INTEL AGENT                               │
-│                    Self-Evolving + Intelligence Tradecraft                   │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                    │
-        ┌───────────────────────────┼───────────────────────────┐
-        │                           │                           │
-        ▼                           ▼                           ▼
-┌───────────────────┐   ┌───────────────────┐   ┌───────────────────┐
-│   ORIENT PHASE    │   │   ANALYZE PHASE   │   │   LEARN PHASE     │
-│   (Collection)    │   │   (Tradecraft)    │   │   (Self-Evolve)   │
-├───────────────────┤   ├───────────────────┤   ├───────────────────┤
-│ • monitor-feeds   │   │ • diamond-model   │   │ • evaluation      │
-│ • enrich-iocs     │   │ • ach-analysis    │   │ • optimization    │
-│                   │   │ • generate-report │   │ • version control │
-└───────────────────┘   └───────────────────┘   └───────────────────┘
+┌──────────────────────────────────────────────────────────────────────┐
+│                         CTI Agent v2.4.0                              │
+│           Multi-Agent Intelligence with Adversarial Review           │
+└──────────────────────────────────────────────────────────────────────┘
+
+  Collector → Analyst → [Devil's Advocate ↔ Analyst] → Verifier → Reporter
+      │           │              │                         │           │
+  monitor-    diamond-      challenge high-          re-query      generate
+  feeds       model         confidence              source        report
+  enrich-     ACH           assessments             APIs          STIX 2.1
+  iocs        analysis      propose alt.            detect        ATT&CK
+                            hypotheses              hallucination layers
 ```
 
 ---
@@ -48,33 +45,70 @@ cp config/.env.template config/.env
 ```
 
 **Required Keys**:
-- `FEEDLY_API_KEY` - Feedly Threat Intelligence
-- `VT_API_KEY` - VirusTotal (used by GTI MCP)
+- `VT_API_KEY` — VirusTotal / Google Threat Intelligence
+- `FEEDLY_ACCESS_TOKEN` — Feedly Threat Intelligence
 
-**Optional Keys**:
-- `ABUSEIPDB_API_KEY` - AbuseIPDB
-- `OTX_API_KEY` - AlienVault OTX
+**Optional Keys** (enables additional enrichment):
+- `SHODAN_API_KEY` — Shodan
+- `OTX_API_KEY` — AlienVault OTX
+- `ABUSEIPDB_API_KEY` — AbuseIPDB
+- `CENSYS_API_ID` / `CENSYS_API_SECRET` — Censys
+- `MALLORY_API_KEY` — Mallory real-time threats
 
 ### 2. Install MCP Servers
 
 ```bash
-# Feedly MCP
+# Core (required)
 uvx feedly-mcp
-
-# GTI MCP (VirusTotal)
 uvx gti_mcp
 
-# Optional: fastmcp-threatintel
+# Enrichment (recommended)
 pip install fastmcp-threatintel
 ```
 
+See `config/mcp_server_registry.json` for the full 23-server registry with install commands.
+
 ### 3. Run the Agent
 
-In Claude Code or Claude.ai with computer use:
+In Claude Code:
 
 ```
 Read AGENT.md and begin a threat intelligence session.
-Focus on [YOUR PRIORITY - e.g., "APT activity", "ransomware trends", "CVE-2024-XXXX"]
+Focus on [YOUR PRIORITY - e.g., "APT activity", "ransomware trends", "CVE-2025-XXXX"]
+```
+
+For the full multi-agent pipeline:
+
+```
+Read AGENT.md and run the orchestrate-team skill for a complete intelligence cycle.
+```
+
+---
+
+## Multi-Agent Team (v2.4.0)
+
+Five specialized agents with structural separation of concerns:
+
+| Agent | Role | Skills |
+|-------|------|--------|
+| **Collector** | Gather and enrich raw intelligence | monitor-feeds, enrich-iocs |
+| **Analyst** | Produce calibrated assessments | diamond-model, ACH |
+| **Devil's Advocate** | Challenge high-confidence judgments | ACH (adversarial) |
+| **Verifier** | Independently re-validate all claims | verify-claims |
+| **Reporter** | Assemble final deliverables | generate-report, STIX, ATT&CK |
+
+### Why Multi-Agent?
+
+This pipeline addresses two critical LLM failure modes:
+
+1. **Confirmation bias** — The Devil's Advocate has a structural mandate to challenge all assessments rated "highly likely" or above, argue for alternative hypotheses, and document dissenting views per [ICD 203](https://www.dni.gov/files/documents/ICD/ICD%20203%20Analytic%20Standards.pdf)
+2. **Hallucination** — The Verifier independently re-queries source APIs for every IOC, TTP, and attribution claim. Refuted claims are quarantined and never reach the final report
+
+### Pipeline Data Flow
+
+```
+collection_bundle → assessment_package → debate_record → verification_report → final deliverables
+    (Collector)        (Analyst)          (DA ↔ Analyst)    (Verifier)           (Reporter)
 ```
 
 ---
@@ -82,74 +116,72 @@ Focus on [YOUR PRIORITY - e.g., "APT activity", "ransomware trends", "CVE-2024-X
 ## Project Structure
 
 ```
-junior-threat-intel-agent/
-├── AGENT.md                    # Master orchestrator (read this first)
-│
-├── skills/                     # Modular capabilities
-│   ├── plan-session/           # Session planning
-│   ├── monitor-feeds/          # Intelligence collection
-│   ├── enrich-iocs/           # IOC enrichment
-│   ├── diamond-model-analysis/ # Structured intrusion analysis
-│   ├── analysis-competing-hypotheses/  # Attribution testing
-│   ├── generate-report/        # Report production
-│   └── self-evolving-loop/     # Continuous improvement
-│
-├── evaluation/                 # Quality assessment
-│   ├── graders/               # Python grading scripts
-│   │   ├── ttp_coverage.py
-│   │   ├── ioc_fidelity.py
-│   │   ├── framework_compliance.py
-│   │   └── analytical_quality_judge.json
-│   └── run_evaluation.py      # Evaluation orchestrator
-│
-├── config/                    # Configuration
-│   ├── mcp_config.json        # MCP server settings
-│   ├── feeds.json             # RSS feed fallback
-│   └── .env.template          # API key template
-│
-├── templates/                 # Output templates
-│   └── report_template.md
-│
-├── state/                     # Persistent state
-│   ├── processed_guids.json   # Deduplication
-│   ├── skill_versions.json    # Version control
-│   └── active_context.md      # Session state
-│
-├── memory/                    # Working memory
-│   └── scratchpad.md          # Session scratchpad
-│
-├── logs/                      # Event logs
-│   └── reflections/           # Learning logs
-│
-├── reports/                   # Generated reports
-└── alerts/                    # High-priority alerts
+CTI_agent/
+├── AGENT.md                         # Master orchestrator (start here)
+├── agents/definitions/              # Multi-agent team definitions
+│   ├── collector.md                 #   Feed monitoring + IOC enrichment
+│   ├── analyst.md                   #   Diamond Model + ACH analysis
+│   ├── devils_advocate.md           #   Adversarial challenge protocol
+│   ├── verifier.md                  #   Independent claim validation
+│   └── reporter.md                  #   Final product assembly
+├── skills/                          # 13 skill prompt files
+│   ├── orchestrate-team/            #   5-agent pipeline coordinator
+│   ├── monitor-feeds/               #   Intelligence collection
+│   ├── enrich-iocs/                 #   Multi-source IOC enrichment
+│   ├── verify-claims/               #   Claim validation + hallucination detection
+│   ├── diamond-model-analysis/      #   Structured intrusion analysis
+│   ├── analysis-competing-hypotheses/ # Attribution hypothesis testing
+│   ├── generate-report/             #   ICD 203 intelligence reports
+│   ├── produce-stix-bundle/         #   STIX 2.1 output
+│   ├── produce-attack-layers/       #   ATT&CK Navigator layers
+│   ├── recall-intelligence/         #   Pinecone vector memory
+│   ├── check-server-health/         #   MCP server availability
+│   ├── plan-session/                #   Session planning
+│   ├── self-evolving-loop/          #   Meta-prompt optimization
+│   └── external/                    #   Third-party skills
+├── lib/                             # Python deterministic logic (12 modules)
+│   ├── team_data.py                 #   Inter-agent data schemas
+│   ├── debate.py                    #   Devil's Advocate debate engine
+│   ├── verification_pipeline.py     #   Claim extraction + routing
+│   ├── stix_builder.py              #   Diamond Model → STIX 2.1
+│   ├── attack_layers.py             #   Diamond Model → ATT&CK Navigator
+│   ├── confidence_decay.py          #   IOC freshness half-life calculations
+│   ├── actor_profiles.py            #   Persistent threat actor profiles
+│   ├── pinecone_memory.py           #   Vector memory for historical context
+│   ├── health_check.py              #   MCP server health checks
+│   ├── config.py                    #   Registry loader + routing tables
+│   ├── metrics.py                   #   Observability metrics
+│   └── logging_schema.py            #   Structured JSONL logging
+├── evaluation/                      # Quality assessment graders
+├── config/                          # Configuration
+│   ├── mcp_server_registry.json     #   23 MCP servers (source of truth)
+│   ├── mcp_config.json              #   Claude Code MCP config (generated)
+│   ├── team_config.json             #   Multi-agent pipeline config
+│   ├── skill_ownership.json         #   Skill conflict resolution
+│   └── feeds.json                   #   RSS fallback feeds
+├── tests/                           # 182 tests
+├── demo/                            # Demo dataset + mock MCP responses
+├── docs/                            # Architecture + development docs
+├── state/                           # Runtime state files
+└── reports/                         # Generated intelligence products
 ```
 
 ---
 
-## Skills Overview
+## MCP Server Integrations
 
-### Collection Phase
+23 servers across 6 categories with dynamic routing and graceful degradation:
 
-| Skill | Purpose | MCP Tools Used |
-|-------|---------|----------------|
-| `plan-session` | Generate execution plan | None |
-| `monitor-feeds` | Collect threat intel | Feedly, web_fetch |
-| `enrich-iocs` | Multi-source enrichment | GTI, fastmcp-threatintel |
+| Category | Servers | Purpose |
+|----------|---------|---------|
+| **Intelligence** | Feedly, OTX, ORKL, TI Mindmap HUB, Mallory | Threat feed collection |
+| **Enrichment** | GTI/VirusTotal, Shodan, Censys, fastmcp-threatintel | IOC enrichment |
+| **Vulnerability** | NVD, KEV, EPSS, Vulnerability Intelligence, Nuclei | CVE intelligence |
+| **Malware Analysis** | Ghidra, YARA, Capa, Radare2, Binwalk | Binary analysis |
+| **OSINT** | DNSTwist, NetworksDB | DNS + network recon |
+| **Utility** | CyberChef | Data transformation |
 
-### Analysis Phase
-
-| Skill | Purpose | Framework |
-|-------|---------|-----------|
-| `diamond-model-analysis` | Structure intrusion data | Diamond Model |
-| `analysis-competing-hypotheses` | Test attribution | ACH (Heuer) |
-| `generate-report` | Produce intelligence products | ICD 203 |
-
-### Learning Phase
-
-| Skill | Purpose | Method |
-|-------|---------|--------|
-| `self-evolving-loop` | Continuous improvement | Eval + Meta-optimization |
+IOC routing is configured per type (IP, domain, hash, URL, CVE) with primary/secondary/fallback chains. The `check-server-health` skill adjusts routing at session start based on available API keys and server status.
 
 ---
 
@@ -158,19 +190,19 @@ junior-threat-intel-agent/
 ### Diamond Model
 
 Structures intrusion analysis into four vertices:
-- **Adversary**: Who conducted the attack
-- **Infrastructure**: Systems used (C2, delivery)
-- **Capability**: Tools and techniques
-- **Victim**: Target of the attack
+- **Adversary** — Who conducted the attack
+- **Infrastructure** — Systems used (C2, delivery)
+- **Capability** — Tools and techniques (mapped to ATT&CK)
+- **Victim** — Target of the attack
 
 ### Analysis of Competing Hypotheses (ACH)
 
 Seven-step process for rigorous attribution:
-1. Generate all plausible hypotheses
-2. List all evidence
+1. Generate all plausible hypotheses (including deception + null)
+2. List all evidence from Diamond Model
 3. Create diagnosticity matrix
 4. Refine hypotheses
-5. Assess diagnostic evidence
+5. Assess diagnostic evidence (focus on refuting, not confirming)
 6. Calculate likelihood
 7. Report with calibrated confidence
 
@@ -188,124 +220,103 @@ Seven-step process for rigorous attribution:
 
 ---
 
+## Verification Gate
+
+All claims pass through a 5-tier verification system before reaching the final report:
+
+| Status | Confidence Multiplier | Handling |
+|--------|----------------------|----------|
+| `VERIFIED_HIGH` | 1.0x | Include as stated |
+| `VERIFIED_MEDIUM` | 0.75x | Include with caveat |
+| `VERIFIED_LOW` | 0.5x | Include with strong caveat |
+| `UNVERIFIED` | 0.25x | Prefix with `[UNVERIFIED]` |
+| `REFUTED` | 0.0x | Suppress entirely |
+
+Hallucination detection flags:
+- Claims with no source verification possible
+- Refutation rate >=50% across all claims
+- Attribution claims supported by only 1 source
+
+---
+
+## Output Products
+
+| Product | Format | Location |
+|---------|--------|----------|
+| Intelligence Reports | Markdown (ICD 203) | `reports/{guid}.md` |
+| STIX 2.1 Bundles | JSON | `reports/{guid}_stix_bundle.json` |
+| ATT&CK Navigator Layers | JSON (v4.5) | `reports/{guid}_attack_layer.json` |
+| Detection Rules | Sigma / YARA | `reports/{guid}_detections/` |
+| IOC Packages | STIX 2.1 JSON | `reports/{guid}_iocs.json` |
+
+Reports include: executive summary, key judgments with calibrated confidence, Diamond Model summary, ATT&CK mapping, ACH summary, **Alternative Analysis** (from Devil's Advocate debate), verified IOC tables, defensive recommendations, assumptions, intelligence gaps, and reassessment triggers.
+
+---
+
 ## Evaluation System
 
 Four graders assess output quality:
 
 | Grader | Measures | Threshold |
 |--------|----------|-----------|
-| `ttp_coverage` | TTP extraction accuracy | 0.80 |
+| `ttp_coverage` | TTP extraction completeness | 0.80 |
 | `ioc_fidelity` | IOC accuracy (0 if hallucinated) | 0.90 |
-| `framework_compliance` | Required sections present | 0.85 |
+| `framework_compliance` | Required report sections present | 0.85 |
 | `analytical_quality` | Reasoning quality (LLM judge) | 0.70 |
 
-### Running Evaluation
+The self-evolving loop evaluates outputs, identifies underperforming skills, and triggers meta-prompt optimization with automatic rollback on regression.
+
+---
+
+## Development
 
 ```bash
-python evaluation/run_evaluation.py source.txt output.md --json
+# Run tests (182 passing)
+uv run --with pytest python -m pytest -q
+
+# Lint + format
+ruff check . --fix && ruff format .
 ```
 
----
-
-## Self-Improvement
-
-The agent improves itself through:
-
-1. **Quantitative Evaluation**: All outputs scored by graders
-2. **Meta-Prompt Optimization**: Underperforming skills automatically improved
-3. **Version Control**: All changes tracked with rollback capability
-4. **Safety Constraints**: Critical patterns protected from optimization
-
-### Rollback Triggers
-
-Automatic rollback if:
-- New version scores 10%+ worse
-- 3+ consecutive failures
-- Any grader returns < 0.3
-- Protected pattern removed
+See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for the full development guide and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for system architecture.
 
 ---
 
-## Output Examples
+## External Skills
 
-### Intelligence Report
-
-Reports include:
-- Executive Summary
-- Key Judgments (with confidence)
-- Diamond Model Summary
-- ATT&CK Mapping
-- IOCs (defanged)
-- Detection Rules (Sigma/YARA)
-- Defensive Recommendations
-- Assumptions & Gaps
-
-### Detection Artifacts
-
-- **Sigma Rules**: SIEM detection rules
-- **YARA Rules**: File-based detection
-- **Hunting Queries**: SPL/KQL queries
-
-### IOC Packages
-
-- **STIX 2.1**: Machine-readable IOC bundles
+| Source | Skills | Purpose |
+|--------|--------|---------|
+| [gl0bal01/malware-analysis](https://github.com/gl0bal01/malware-analysis-claude-skills) | malware-triage, dynamic-analysis, detection-engineer | Malware analysis pipeline |
+| [YARAHQ/yara-rule-skill](https://github.com/YARAHQ/yara-rule-skill) | yara-rule-skill | YARA detection rule authoring |
+| [trailofbits/skills](https://github.com/trailofbits/skills) | variant-analysis, semgrep, static-analysis | Security analysis |
 
 ---
 
-## Configuration
+## Version History
 
-### MCP Servers
-
-Edit `config/mcp_config.json` to configure:
-- Server commands and arguments
-- API key environment variables
-- Rate limits
-- Tool selection rules
-
-### Feeds (Fallback)
-
-Edit `config/feeds.json` for RSS fallback when MCP unavailable.
-
----
-
-## Safety & Trust
-
-### Trust Boundaries
-
-| Source | Trust Level |
-|--------|-------------|
-| SKILL.md files | Trusted |
-| MCP responses | Semi-trusted |
-| Feed content | Untrusted |
-| User input | Semi-trusted |
-
-### Prime Directives (Immutable)
-
-1. Never fabricate intelligence
-2. Calibrate confidence (ICD 203)
-3. Preserve analytical integrity
-4. Protect sources
-5. Fail safe
+| Version | Focus |
+|---------|-------|
+| **v2.4.0** | Multi-agent team (5 agents), debate engine, verification pipeline |
+| v2.3.0 | Confidence decay, actor profiles, Pinecone memory, metrics |
+| v2.2.0 | STIX 2.1 builder, ATT&CK layers, external skills, demo dataset |
+| v2.1.0 | 23 MCP servers, dynamic routing, health checks, evaluation graders |
 
 ---
 
 ## Roadmap
 
-- [x] Core architecture
-- [x] Diamond Model skill
-- [x] ACH skill
-- [x] Evaluation graders
-- [x] Self-evolving loop
+- [x] Core architecture + skills
+- [x] 23 MCP server integrations with dynamic routing
+- [x] STIX 2.1 + ATT&CK Navigator output
+- [x] External skill integration (malware analysis, YARA, Trail of Bits)
+- [x] Confidence decay + threat actor profiles
+- [x] Pinecone vector memory for historical context
+- [x] Multi-agent team with adversarial review
+- [x] Independent verification pipeline + hallucination detection
 - [ ] SecOps SIEM integration
 - [ ] SOAR playbook generation
-- [ ] Multi-agent collaboration
+- [ ] Web dashboard
 - [ ] Historical trend analysis
-
----
-
-## License
-
-MIT License - See LICENSE file.
 
 ---
 
@@ -315,9 +326,13 @@ MIT License - See LICENSE file.
 - [Psychology of Intelligence Analysis (Heuer)](https://www.cia.gov/resources/csi/books-and-monographs/psychology-of-intelligence-analysis-2/)
 - [MITRE ATT&CK](https://attack.mitre.org/)
 - [ICD 203 Analytic Standards](https://www.dni.gov/files/documents/ICD/ICD%20203%20Analytic%20Standards.pdf)
-- [OpenAI Self-Evolving Agents](https://cookbook.openai.com/examples/partners/self_evolving_agents/autonomous_agent_retraining)
 
 ---
 
-*CTI Agent v1.0.0*  
-*Self-evolving threat intelligence with professional analytical tradecraft*
+## License
+
+MIT License
+
+---
+
+*CTI Agent v2.4.0 — Multi-agent intelligence team with adversarial review and independent verification.*
