@@ -1,91 +1,116 @@
 # CTI Agent - Quick Start Guide
 
+**Version**: 2.4.0
+
 ## Overview
 
-CTI Agent is a self-evolving threat intelligence system that combines:
-- **MCP-native intelligence collection** (Feedly, GTI/VirusTotal)
-- **Professional analytical tradecraft** (Diamond Model, ACH, ATT&CK)
+CTI Agent is a multi-agent cyber threat intelligence system that combines:
+- **23 MCP server integrations** across 6 categories (intelligence, enrichment, vulnerability, malware analysis, OSINT, utility)
+- **5-agent team** with adversarial review and independent verification
+- **Professional analytical tradecraft** (Diamond Model, ACH, ATT&CK, ICD 203)
+- **Anti-hallucination verification** (5-tier claim validation with quarantine)
 - **Continuous self-improvement** (quantitative graders, meta-prompt optimization)
 
 ## Prerequisites
 
 ### Required API Keys
 
-Set these environment variables before use:
-
 ```bash
-# VirusTotal / Google Threat Intelligence
-export VT_API_KEY="your_virustotal_api_key"
-
-# Feedly (requires Feedly TI subscription)
-export FEEDLY_ACCESS_TOKEN="your_feedly_token"
-
-# Optional: Additional enrichment sources
-export ABUSEIPDB_API_KEY="your_abuseipdb_key"
-export OTX_API_KEY="your_otx_key"
+cp config/.env.template config/.env
+# Edit config/.env with your API keys
 ```
+
+**Required**:
+- `VT_API_KEY` — VirusTotal / Google Threat Intelligence
+- `FEEDLY_ACCESS_TOKEN` — Feedly Threat Intelligence
+
+**Optional** (enables additional enrichment):
+- `SHODAN_API_KEY` — Shodan
+- `OTX_API_KEY` — AlienVault OTX
+- `ABUSEIPDB_API_KEY` — AbuseIPDB
+- `CENSYS_API_ID` / `CENSYS_API_SECRET` — Censys
+- `MALLORY_API_KEY` — Mallory real-time threats
 
 ### MCP Server Setup
 
-Install required MCP servers:
-
 ```bash
-# GTI (VirusTotal)
-pip install gti-mcp
+# Core (required)
+uvx feedly-mcp
+uvx gti_mcp
 
-# Feedly
-pip install feedly-mcp
-
-# Multi-source enrichment
+# Enrichment (recommended)
 pip install fastmcp-threatintel
 ```
+
+See `config/mcp_server_registry.json` for the full 23-server registry with install commands.
 
 ## Directory Structure
 
 ```
-junior-threat-intel-agent/
-├── AGENT.md                    # Master orchestrator (read this first)
-├── skills/                     # Skill definitions
-│   ├── plan-session/          # Session planning
-│   ├── monitor-feeds/         # Intelligence collection
-│   ├── enrich-iocs/           # IOC enrichment
-│   ├── diamond-model-analysis/ # Intrusion analysis
-│   ├── analysis-competing-hypotheses/ # Attribution
-│   ├── generate-report/       # Report generation
-│   └── self-evolving-loop/    # Self-improvement
-├── evaluation/                 # Graders and validators
-│   ├── graders/               # Python grader scripts
-│   └── eval_runner.py         # Evaluation orchestrator
-├── config/                     # Configuration files
-├── state/                      # Persistent state
-├── memory/                     # Session working memory
-├── templates/                  # Report templates
-├── logs/                       # Event logs
-└── reports/                    # Generated reports
+CTI_agent/
+├── AGENT.md                         # Master orchestrator (start here)
+├── agents/definitions/              # Multi-agent team definitions
+│   ├── collector.md                 #   Feed monitoring + IOC enrichment
+│   ├── analyst.md                   #   Diamond Model + ACH analysis
+│   ├── devils_advocate.md           #   Adversarial challenge protocol
+│   ├── verifier.md                  #   Independent claim validation
+│   └── reporter.md                  #   Final product assembly
+├── skills/                          # 13 skill prompt files
+│   ├── orchestrate-team/            #   5-agent pipeline coordinator
+│   ├── monitor-feeds/               #   Intelligence collection
+│   ├── enrich-iocs/                 #   Multi-source IOC enrichment
+│   ├── verify-claims/               #   Claim validation + hallucination detection
+│   ├── diamond-model-analysis/      #   Structured intrusion analysis
+│   ├── analysis-competing-hypotheses/ # Attribution hypothesis testing
+│   ├── generate-report/             #   ICD 203 intelligence reports
+│   ├── produce-stix-bundle/         #   STIX 2.1 output
+│   ├── produce-attack-layers/       #   ATT&CK Navigator layers
+│   ├── recall-intelligence/         #   Pinecone vector memory
+│   ├── check-server-health/         #   MCP server availability
+│   ├── plan-session/                #   Session planning
+│   └── self-evolving-loop/          #   Meta-prompt optimization
+├── lib/                             # Python deterministic logic (12 modules)
+├── evaluation/                      # Quality assessment graders
+├── config/                          # Configuration files
+├── tests/                           # 182 tests
+├── state/                           # Runtime state files
+└── reports/                         # Generated intelligence products
 ```
 
 ## Basic Usage
 
-### 1. Initialize a Session
-
-The agent reads `AGENT.md` first, then:
-1. Loads state from `state/active_context.md`
-2. Creates/loads `memory/scratchpad.md`
-3. Executes `plan-session` skill
-
-### 2. Execute Intelligence Cycle
+### 1. Single-Agent Session
 
 ```
-plan-session → monitor-feeds → enrich-iocs → diamond-model-analysis 
-            → analysis-competing-hypotheses → generate-report
+Read AGENT.md and begin a threat intelligence session.
+Focus on [YOUR PRIORITY - e.g., "APT activity", "ransomware trends", "CVE-2025-XXXX"]
 ```
+
+Pipeline: `plan-session → monitor-feeds → enrich-iocs → diamond-model-analysis → analysis-competing-hypotheses → generate-report`
+
+### 2. Full Multi-Agent Pipeline
+
+```
+Read AGENT.md and run the orchestrate-team skill for a complete intelligence cycle.
+```
+
+Pipeline: `Collector → Analyst → [Devil's Advocate ↔ Analyst debate] → Verifier → Reporter`
 
 ### 3. Self-Improvement (Optional)
 
-After producing outputs, run `self-evolving-loop` to:
-- Evaluate outputs against 4 graders
-- Identify underperforming skills
-- Trigger meta-prompt optimization if needed
+After producing outputs, run `self-evolving-loop` to evaluate against 4 graders and trigger meta-prompt optimization if needed.
+
+## Multi-Agent Team
+
+| Agent | Role | Skills |
+|-------|------|--------|
+| **Collector** | Gather and enrich raw intelligence | monitor-feeds, enrich-iocs |
+| **Analyst** | Produce calibrated assessments | diamond-model, ACH |
+| **Devil's Advocate** | Challenge high-confidence judgments | ACH (adversarial) |
+| **Verifier** | Independently re-validate all claims | verify-claims |
+| **Reporter** | Assemble final deliverables | generate-report, STIX, ATT&CK |
+
+**Why multi-agent?** The Devil's Advocate structurally prevents confirmation bias by challenging all assessments rated "highly likely" or above. The Verifier independently re-queries source APIs for every claim — refuted claims are quarantined and never reach the final report.
 
 ## Key Concepts
 
@@ -93,50 +118,63 @@ After producing outputs, run `self-evolving-loop` to:
 
 | Framework | Purpose | When Used |
 |-----------|---------|-----------|
-| Diamond Model | Structure intrusion data | After IOC enrichment |
-| ACH | Test attribution hypotheses | When attribution uncertain |
-| Kill Chain | Map attack phases | During analysis |
-| ATT&CK | Standardize TTPs | Throughout |
+| Diamond Model | Structure intrusion data (Adversary, Infrastructure, Capability, Victim) | After IOC enrichment |
+| ACH | Test attribution hypotheses with diagnosticity matrix | When attribution uncertain |
+| Kill Chain / ATT&CK | Map attack phases and standardize TTPs | Throughout analysis |
 
-### Confidence Calibration
+### Confidence Calibration (ICD 203)
 
-All assessments use ICD 203 probability language:
-- **Almost certain**: >95%
-- **Highly likely**: 80-95%
-- **Likely**: 60-80%
-- **Roughly even chance**: 40-60%
-- **Unlikely**: 20-40%
+| Term | Probability |
+|------|-------------|
+| Almost certain | >95% |
+| Highly likely | 80-95% |
+| Likely | 60-80% |
+| Roughly even chance | 40-60% |
+| Unlikely | 20-40% |
 
-### Self-Improvement Graders
+### Verification Gate
+
+All claims pass through a 5-tier system before reaching the final report:
+
+| Status | Confidence Multiplier | Handling |
+|--------|----------------------|----------|
+| `VERIFIED_HIGH` | 1.0x | Include as stated |
+| `VERIFIED_MEDIUM` | 0.75x | Include with caveat |
+| `VERIFIED_LOW` | 0.5x | Include with strong caveat |
+| `UNVERIFIED` | 0.25x | Prefix with `[UNVERIFIED]` |
+| `REFUTED` | 0.0x | Suppress entirely |
+
+### Evaluation Graders
 
 | Grader | Threshold | Purpose |
 |--------|-----------|---------|
 | TTP Coverage | 0.80 | Verify TTPs captured |
 | IOC Fidelity | 0.90 | Prevent hallucination |
 | Framework Compliance | 0.85 | Ensure structure |
-| Analytical Quality | 0.75 | Assess reasoning |
+| Analytical Quality | 0.70 | Assess reasoning |
 
-## Output Locations
+## Output Products
 
-| Output | Location |
-|--------|----------|
-| Intelligence Reports | `reports/{guid}.md` |
-| Detection Rules | `reports/{guid}_detections/` |
-| IOC Lists | `reports/{guid}_iocs.json` |
-| Session Logs | `logs/{date}.jsonl` |
+| Product | Format | Location |
+|---------|--------|----------|
+| Intelligence Reports | Markdown (ICD 203) | `reports/{guid}.md` |
+| STIX 2.1 Bundles | JSON | `reports/{guid}_stix_bundle.json` |
+| ATT&CK Navigator Layers | JSON (v4.5) | `reports/{guid}_attack_layer.json` |
+| Detection Rules | Sigma / YARA | `reports/{guid}_detections/` |
+| IOC Packages | STIX 2.1 JSON | `reports/{guid}_iocs.json` |
 
 ## Troubleshooting
 
 ### MCP Server Not Responding
-1. Check API keys are set
-2. Verify server is installed: `pip show gti-mcp`
-3. Check rate limits haven't been exceeded
+1. Run `check-server-health` skill to diagnose
+2. Check API keys are set in `config/.env`
+3. Verify server is installed: `pip show gti-mcp`
+4. Check rate limits haven't been exceeded
 
 ### Low Evaluation Scores
 1. Review `state/eval_history.jsonl` for patterns
 2. Check which graders are failing
-3. Review `get_failure_feedback()` output
-4. Let self-evolving-loop optimize, or manually adjust skill
+3. Let self-evolving-loop optimize, or manually adjust skill
 
 ### State Corruption
 1. Backup current state files
@@ -145,11 +183,12 @@ All assessments use ICD 203 probability language:
 
 ## Next Steps
 
-1. Read `AGENT.md` for full architecture
-2. Review skill files in `skills/` directory
-3. Configure MCP servers in `config/mcp_config.json`
-4. Run first session and review outputs
+1. Read `AGENT.md` for the full orchestrator
+2. Read `docs/ARCHITECTURE.md` for system architecture
+3. Read `docs/DEVELOPMENT.md` for development guide
+4. Configure MCP servers in `config/mcp_server_registry.json`
+5. Run first session and review outputs
 
 ---
 
-*CTI Agent v1.0.0*
+*CTI Agent v2.4.0 — Multi-agent intelligence team with adversarial review and independent verification.*
