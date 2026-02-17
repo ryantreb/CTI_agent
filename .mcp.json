@@ -6,7 +6,7 @@
         "gti_mcp"
       ],
       "env": {
-        "VT_API_KEY": "${VT_API_KEY}"
+        "VT_APIKEY": "${VT_API_KEY}"
       }
     },
     "fastmcp-threatintel": {

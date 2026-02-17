@@ -6,7 +6,7 @@
         "gti_mcp"
       ],
       "env": {
-        "VT_API_KEY": "${VT_API_KEY}"
+        "VT_APIKEY": "${VT_API_KEY}"
       }
     },
     "fastmcp-threatintel": {
@@ -17,7 +17,7 @@
         "8001"
       ],
       "env": {
-        "VT_API_KEY": "${VT_API_KEY}",
+        "VIRUSTOTAL_API_KEY": "${VT_API_KEY}",
         "ABUSEIPDB_API_KEY": "${ABUSEIPDB_API_KEY}"
       }
     },
